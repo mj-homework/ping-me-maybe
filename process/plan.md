@@ -15,7 +15,7 @@
   - [ ] Part 2b: live `FeedSourceAdapter` (User-Agent, timeout), `onSchedule`
 - [ ] M1 + M2 – auth, rule CRUD, security rules + rules tests
   - [x] Emulator login (email/password), sign-out – code in prompt #19; tried in the browser by me, works (~23:30)
-  - [ ] Rule form on `/alerts` (create, list, pause/resume, delete) + `rules` security rules + index – code in prompt #21; not yet tried in the browser
+  - [x] Rule form on `/alerts` (create, list, pause/resume, delete) + `rules` security rules + index – code in prompt #21, hardened in #22; tried in the browser by me, works (~00:50)
   - [ ] Rules tests for `rules` and `events` (morning)
 - [x] M5 part: `/admin/events` list, `admin` guard, `events` admin-read rule – code in prompts #19/#20; tried in the browser by me, works (~23:30)
 - [ ] M4 – matcher, email (Mailpit), idempotency (S4)

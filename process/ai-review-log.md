@@ -159,3 +159,10 @@ Record of how AI-generated output was reviewed: what was checked, and what was c
 - **What I checked:** Check (IDE Claude, files): npm 12 skipped all install scripts; `@firebase/util/dist/index.esm.js` imports `./postinstall.mjs`, which only its postinstall script generates, so the bundle would break without it. Script read first: without `FIREBASE_WEBAPP_CONFIG` it only writes two files returning `undefined`, no network.
 - **What I changed / rejected:** `npm install-scripts approve @firebase/util` – only that package (`allowScripts` in `app/package.json`); the other blocked scripts (`msgpackr-extract`, `protobufjs`) stay off.
 - **Why:** Only the one script the bundle needs; the others stay blocked to keep install-time code minimal.
+
+### 2026-10-20 00:56 – Gaps in the #21 rule form and rules (prompt #22)
+
+- **What the AI produced:** `isValidRule()` in `firestore.rules`, `alerts-page.ts` and `normalizeKeywords` (prompt #21).
+- **What I checked:** Check (planning chat): blank name and duplicate sourceIds/channels passed the rules; empty `<p>` used as spacers; `normalizeKeywords` untested.
+- **What I changed / rejected:** `trim()` and `toSet()` checks in the rules (emulator script: blank name and duplicate sourceId denied); spacers replaced with component `styles`; Vitest for `normalizeKeywords` (prompt #22).
+- **Why:** Reason not stated.

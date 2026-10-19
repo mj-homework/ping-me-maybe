@@ -14,10 +14,10 @@ rules_version='2'
 // Document ID: Firestore auto-ID
 // Fields (all required, no others):
 //   - userId: string (immutable) - owner, must be the writer's uid
-//   - name: string (1–80 chars)
-//   - sourceIds: list (1–3 items, each one of the three SourceIds)
+//   - name: string (1–80 chars, not blank after trimming)
+//   - sourceIds: list (1–3 items, each one of the three SourceIds, no duplicates)
 //   - keywords: list (1–20 items) - lower-cased, trimmed, deduplicated by the client
-//   - channels: list (1–2 items, each 'email' or 'slack')
+//   - channels: list (1–2 items, each 'email' or 'slack', no duplicates)
 //   - active: bool
 //   - createdAt: timestamp (immutable, server time on create)
 //   - updatedAt: timestamp (server time on every write)
@@ -49,12 +49,14 @@ service cloud.firestore {
         'createdAt', 'updatedAt'];
       return data.keys().hasOnly(fields) && data.keys().hasAll(fields)
         && data.userId is string
-        && data.name is string && data.name.size() >= 1 && data.name.size() <= 80
+        && data.name is string && data.name.trim().size() >= 1 && data.name.size() <= 80
         && data.sourceIds is list && data.sourceIds.size() >= 1 && data.sourceIds.size() <= 3
         && data.sourceIds.hasOnly(['bbc-world', 'bbc-business', 'reddit-nottheonion'])
+        && data.sourceIds.toSet().size() == data.sourceIds.size()
         && data.keywords is list && data.keywords.size() >= 1 && data.keywords.size() <= 20
         && data.channels is list && data.channels.size() >= 1 && data.channels.size() <= 2
         && data.channels.hasOnly(['email', 'slack'])
+        && data.channels.toSet().size() == data.channels.size()
         && data.active is bool
         && data.createdAt is timestamp
         && data.updatedAt == request.time;

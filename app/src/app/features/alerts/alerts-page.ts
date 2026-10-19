@@ -29,7 +29,6 @@ const MAX_KEYWORDS = 20;
             required
           />
         </label>
-        <p></p>
         <fieldset>
           <legend>Sources</legend>
           @for (source of sourceOptions; track source.id) {
@@ -44,7 +43,6 @@ const MAX_KEYWORDS = 20;
             </label>
           }
         </fieldset>
-        <p></p>
         <label>
           Keywords (comma-separated, any one matches)
           <input
@@ -57,13 +55,11 @@ const MAX_KEYWORDS = 20;
         @if (keywords().length > maxKeywords) {
           <p>At most {{ maxKeywords }} keywords.</p>
         }
-        <p></p>
         <fieldset>
           <legend>Channels</legend>
           <label><input type="checkbox" checked disabled /> Email</label>
           <label><input type="checkbox" disabled /> Slack (coming later)</label>
         </fieldset>
-        <p></p>
         <button type="submit" [disabled]="!valid() || saving()">Create rule</button>
       </form>
 
@@ -107,6 +103,14 @@ const MAX_KEYWORDS = 20;
           </tbody>
         </table>
       }
+    }
+  `,
+  styles: `
+    /* One block per form row, with space between them. */
+    form > label,
+    form > fieldset {
+      display: block;
+      margin-block: 1em;
     }
   `,
 })

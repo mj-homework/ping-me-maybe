@@ -25,8 +25,13 @@ Decided by me: "Users cannot read events (design.md §1), so step 2 shows them o
 
 - Matcher (any keyword, ADR-014) + email channel.
 - **I see:** the email for the `florida` rule in Mailpit.
+- Matcher must not trust rule keywords: skip non-string or empty ones (rules cannot validate list items, see the `firestore.rules` header).
 
 If step 4 does not fit tonight, it goes first tomorrow morning. Security-rules tests also move to the morning.
+
+## Morning
+
+- 11:30–13:00, README slot (`plan.md` time blocks): Beef up README.md, and state near the top that development used two Claudes: Claude Code in the IDE wrote the code, and a separate planning chat (Claude desktop app, Windows) planned the steps, wrote the prompts and checked the IDE Claude's work.
 
 ## How I work tonight
 
