@@ -1,6 +1,6 @@
-export type SourceId = "bbc-world" | "bbc-business" | "reddit-nottheonion";
+export type SourceId = 'bbc-world' | 'bbc-business' | 'reddit-nottheonion';
 
-export type EventCategory = "world" | "business" | "oddities";
+export type EventCategory = 'world' | 'business' | 'oddities';
 
 export interface SourceConfig {
   id: SourceId;

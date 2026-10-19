@@ -422,3 +422,12 @@ a short summary of every file you changed – I review before committing.
 - **Decided by me:** "I prefer app/ and functions/ side by side – two separate programs, not one inside the other."
 - **Outcome:** 22 files moved with `git mv` on `restructure-app`. Root `node_modules`, `dist/`, `.angular/` deleted; `npm install` in `app/`. Paths fixed in `.gitignore` (`/app/…`), `.vscode/tasks.json` (`path: app`, explicit labels so `launch.json` still resolves), README, CLAUDE.md; `firebase.json` has no Angular paths. `ng build` OK; `ng test` 1/2 – `app.spec.ts` "should render title" fails because `app.html` is only `<router-outlet />` since 39b10e4 (not caused by the move). Functions: build OK, 13/13 tests. ADR-015 date 2026-10-19 20:53 (given by me). Not committed.
 - **Verdict:** [PENDING – my review]
+
+### #15
+
+- **Timestamp:** 2026-10-19 21:47
+- **Tool:** Claude Code (WebStorm)
+- **Prompt:** Unify code style on main: delete `functions/.prettierrc`; adjust `functions/.eslintrc.js` (`quotes` single, `object-curly-spacing` always, `max-len` 100) and only other rules that conflict with Prettier; format `functions/src` with the root Prettier; run lint, build, test; ADR-016; review-log entry on CRLF after `git restore`; log as #15. Commit only after OK, do not push.
+- **Decided by me:** "I prefer the root Prettier style in functions/ too – one style across the repo."
+- **Outcome:** `functions/.prettierrc` removed; three rules changed as given. One more Google rule conflicted: `quote-props` (`consistent-as-needed` vs Prettier `as-needed`) → set to `as-needed`. `linebreak-style` stays inherited from `google` (unix). Besides `functions/src`, `functions/.eslintrc.js` itself was also formatted with the root Prettier, because `npm run lint` checks it (31 errors otherwise). Lint clean, build OK, 13/13 tests. ADR-016 date 2026-10-19 21:43 (given by me). Not committed.
+- **Verdict:** [PENDING – my review]

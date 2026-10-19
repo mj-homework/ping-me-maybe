@@ -1,10 +1,10 @@
-import {readFile} from "node:fs/promises";
-import * as path from "node:path";
-import {parseFeed} from "./parse-feed";
-import {NormalizedEvent, SourceAdapter, SourceConfig} from "./types";
+import { readFile } from 'node:fs/promises';
+import * as path from 'node:path';
+import { parseFeed } from './parse-feed';
+import { NormalizedEvent, SourceAdapter, SourceConfig } from './types';
 
 // Same relative location from src/sources and from the compiled lib/sources.
-const FIXTURES_DIR = path.join(__dirname, "..", "..", "fixtures");
+const FIXTURES_DIR = path.join(__dirname, '..', '..', 'fixtures');
 
 /** Serves a recorded feed from functions/fixtures/ (ADR-010). */
 export class ReplaySourceAdapter implements SourceAdapter {
@@ -23,7 +23,7 @@ export class ReplaySourceAdapter implements SourceAdapter {
    */
   async fetchEvents(signal: AbortSignal): Promise<NormalizedEvent[]> {
     const file = path.join(this.fixturesDir, this.source.replayFixture);
-    const xml = await readFile(file, {encoding: "utf8", signal});
+    const xml = await readFile(file, { encoding: 'utf8', signal });
     return toEvents(this.source, xml);
   }
 }

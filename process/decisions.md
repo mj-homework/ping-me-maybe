@@ -411,3 +411,25 @@ ADR-003 kept Angular at the root citing "the standard Firebase layout". The Fire
 
 - Angular commands (`ng build`, `ng test`, `npm install`) run in `app/`.
 - Paths updated in `.gitignore`, `.vscode/tasks.json`, `README.md` and the `CLAUDE.md` Stack line and folder tree; historical process entries keep the old paths.
+
+## ADR-016: One code style across the repo: functions/ follows the root Prettier config
+
+- **Status:** accepted
+- **Date:** 2026-10-19 21:43
+
+### Context
+
+`functions/` used the Google ESLint style (double quotes, no spaces in braces, max 80). The root `.prettierrc` and `.editorconfig` use single quotes and width 100, so formatting a functions file in the IDE broke lint (53 errors).
+
+### Decision
+
+`functions/` ESLint adjusted to the Prettier style (`quotes` single, `object-curly-spacing` always, `max-len` 100, `quote-props` as-needed); `functions/.prettierrc` removed.
+
+### Alternatives rejected
+
+- **A separate `functions/.prettierrc` matching the Google style** – two styles in one repo. It was briefly in place in 635475b.
+
+### Consequences
+
+- One formatter for the whole repo.
+- The style-only diff touches every functions file.

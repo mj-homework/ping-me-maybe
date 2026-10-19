@@ -1,6 +1,6 @@
-import {XMLParser, XMLValidator} from "fast-xml-parser";
-import {htmlToText} from "./html-text";
-import {FeedItem} from "./types";
+import { XMLParser, XMLValidator } from 'fast-xml-parser';
+import { htmlToText } from './html-text';
+import { FeedItem } from './types';
 
 /** A feed that cannot be parsed; the message is meant for humans. */
 export class FeedParseError extends Error {
@@ -9,17 +9,16 @@ export class FeedParseError extends Error {
    */
   constructor(message: string) {
     super(message);
-    this.name = "FeedParseError";
+    this.name = 'FeedParseError';
   }
 }
 
 const parser = new XMLParser({
   ignoreAttributes: false,
-  attributeNamePrefix: "@_",
+  attributeNamePrefix: '@_',
   // Keep titles like "2026" as strings.
   parseTagValue: false,
-  isArray: (_name, jpath) =>
-    jpath === "rss.channel.item" || jpath === "feed.entry",
+  isArray: (_name, jpath) => jpath === 'rss.channel.item' || jpath === 'feed.entry',
 });
 
 type XmlNode = Record<string, unknown>;
@@ -34,7 +33,7 @@ type XmlNode = Record<string, unknown>;
 export function parseFeed(xml: string): FeedItem[] {
   const validation = XMLValidator.validate(xml);
   if (validation !== true) {
-    const {msg, line} = validation.err;
+    const { msg, line } = validation.err;
     throw new FeedParseError(`Invalid XML at line ${line}: ${msg}`);
   }
   const doc = parser.parse(xml) as XmlNode;
@@ -46,9 +45,7 @@ export function parseFeed(xml: string): FeedItem[] {
   } else if (isNode(doc.feed)) {
     items = asNodes(doc.feed.entry).map(atomEntry);
   } else {
-    throw new FeedParseError(
-      "Unsupported feed format: expected <rss> or <feed>",
-    );
+    throw new FeedParseError('Unsupported feed format: expected <rss> or <feed>');
   }
 
   const seen = new Set<string>();
@@ -67,7 +64,7 @@ export function parseFeed(xml: string): FeedItem[] {
 function rssItem(item: XmlNode): FeedItem | null {
   // BBC appends a "#N" fragment that differs between copies of the same
   // story (ADR-013), so it is not part of the identity.
-  const guid = text(item.guid).replace(/#\d+$/, "");
+  const guid = text(item.guid).replace(/#\d+$/, '');
   const externalId = guid || text(item.link);
   const publishedAt = new Date(text(item.pubDate));
   if (!externalId || isNaN(publishedAt.getTime())) return null;
@@ -90,14 +87,14 @@ function atomEntry(entry: XmlNode): FeedItem | null {
   const externalId = text(entry.id);
   const publishedAt = new Date(text(entry.published) || text(entry.updated));
   if (!externalId || isNaN(publishedAt.getTime())) return null;
-  const author = isNode(entry.author) ? text(entry.author.name) : "";
+  const author = isNode(entry.author) ? text(entry.author.name) : '';
   return {
     externalId,
     title: htmlToText(text(entry.title)),
     summary: redditSummary(text(entry.content)),
     url: atomLink(entry.link),
     publishedAt,
-    attributes: author ? {author} : {},
+    attributes: author ? { author } : {},
   };
 }
 
@@ -108,10 +105,8 @@ function atomEntry(entry: XmlNode): FeedItem | null {
  * @return {string} The self-post text, or "" for link posts.
  */
 function redditSummary(contentHtml: string): string {
-  const match = /<div class="md">([\s\S]*)<\/div>\s*<!-- SC_ON -->/.exec(
-    contentHtml,
-  );
-  return match ? htmlToText(match[1]) : "";
+  const match = /<div class="md">([\s\S]*)<\/div>\s*<!-- SC_ON -->/.exec(contentHtml);
+  return match ? htmlToText(match[1]) : '';
 }
 
 /**
@@ -120,9 +115,8 @@ function redditSummary(contentHtml: string): string {
  */
 function atomLink(link: unknown): string {
   const links = asNodes(link);
-  const alternate =
-    links.find((l) => !l["@_rel"] || l["@_rel"] === "alternate") ?? links[0];
-  return alternate ? text(alternate["@_href"]) : "";
+  const alternate = links.find((l) => !l['@_rel'] || l['@_rel'] === 'alternate') ?? links[0];
+  return alternate ? text(alternate['@_href']) : '';
 }
 
 /**
@@ -130,9 +124,9 @@ function atomLink(link: unknown): string {
  * @return {string} Its trimmed text content, or "".
  */
 function text(value: unknown): string {
-  if (typeof value === "string") return value.trim();
-  if (isNode(value)) return text(value["#text"]);
-  return "";
+  if (typeof value === 'string') return value.trim();
+  if (isNode(value)) return text(value['#text']);
+  return '';
 }
 
 /**
@@ -140,7 +134,7 @@ function text(value: unknown): string {
  * @return {boolean} True if it is an element node.
  */
 function isNode(value: unknown): value is XmlNode {
-  return typeof value === "object" && value !== null && !Array.isArray(value);
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
 }
 
 /**

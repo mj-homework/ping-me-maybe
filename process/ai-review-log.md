@@ -145,3 +145,10 @@ Record of how AI-generated output was reviewed: what was checked, and what was c
 - **What I checked:** Check (planning chat, 2026-10-19 20:53): firebase.google.com/docs/functions/organize-functions – it fixes `firebase.json` at the root and `functions/` source folders, nothing about the frontend location.
 - **What I changed / rejected:** ADR-015 – Angular moved to `app/`.
 - **Why:** The claim was presented as fact but was only how `firebase init` happened to lay out this repo.
+
+### time not given – CRLF line endings after git restore (Windows) (prompt #15)
+
+- **What the AI produced:** nothing – a tooling issue found while reviewing a formatting change.
+- **What I checked:** Check (me): `npm run lint` after `git restore` – 124 linebreak-style errors; git wrote CRLF on Windows (`core.autocrlf`).
+- **What I changed / rejected:** added `.gitattributes` with `* text=auto eol=lf` (635475b); `lint --fix` restored LF.
+- **Why:** reviewers on Windows would hit the same lint failure.
