@@ -4,6 +4,7 @@
 > Agreed in planning chat: 2026-10-19 14:46 – 14:57 (Europe/Budapest).
 > **Updated:** 2026-10-19 15:51 – A2 extended with BBC World; A11 clarified (Slack = Should, after email). Aligned with `scope.md`.
 > **Updated:** 2026-10-19 16:59 – A2: feed URLs and Reddit access verified with curl (User-Agent required, Reddit returns Atom). A3: dedup key covers Atom `<id>`.
+> **Updated:** 2026-10-19 17:53 – A7: keywords are OR-ed, not AND-ed (ADR-014). A12: `ChannelAdapter` renamed to `NotificationChannel` (ADR-013).
 > Status: **Confirmed** = explicitly decided by me · **Default** = proposed, accepted without change.
 
 ## What & where from
@@ -21,7 +22,7 @@
 | # | Question | Assumption | Status |
 |---|---|---|---|
 | A6 | Who are the users? | Anyone who signs up with email/password (Firebase Auth). Single tenant, no teams. | Default |
-| A7 | What can a rule express? | Name, source/category, keywords, channel(s), active toggle. AND logic only. | Default |
+| A7 | What can a rule express? | Name, source/category, keywords, channel(s), active toggle. A rule matches if the event's source is in the rule's sources **and any** of its keywords appears in title + summary (case-insensitive). Keywords are OR-ed, not AND-ed. *(17:53: was "AND logic only", ADR-014.)* | Confirmed |
 | A9 | Noise control (bursts of matching news)? | Out of MVP: no digests, throttling, quiet hours. Known risk; per-rule cooldown is the first candidate. | Default |
 
 *(A8 — geographic filtering — dropped together with the earthquake source.)*
@@ -32,7 +33,7 @@
 |---|---|---|---|
 | A10 | Email to where? | The user's account email. Locally delivered to Mailpit/Ethereal; nothing real is sent. **Email is the primary MVP channel.** | Confirmed |
 | A11 | Slack how? | **Stretch goal (Should), started only after email passes its acceptance criteria** (ADR-011). If built: user pastes their own incoming webhook URL. Known downsides: the URL is a secret (leak = anyone can post), clunky setup for users, fixed channel, silent failure if revoked. | Confirmed |
-| A12 | What does "add more channels later" mean? | `ChannelAdapter` interface + registry. New channel = one adapter + one registration line; matching code untouched. Slack later is the proof. | Default |
+| A12 | What does "add more channels later" mean? | `NotificationChannel` interface + registry *(renamed, ADR-013)*. New channel = one adapter + one registration line; matching code untouched. Slack later is the proof. | Default |
 | A13 | Failed deliveries? | Recorded with status + error; no automatic retry in MVP; visible in admin view. | Default |
 | A14 | Duplicate notifications? | At most one delivery per `event × rule × channel`: deterministic ID `{eventId}_{ruleId}_{channel}` + `create()`. | Default |
 

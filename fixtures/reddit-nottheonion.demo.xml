@@ -3,12 +3,13 @@
   Curated replay fixture for r/nottheonion (Atom, same structure as the live
   https://www.reddit.com/r/nottheonion/.rss response).
   Hand-made for deterministic tests and the demo; all titles, users and IDs are
-  fictitious. The live snapshot (reddit-nottheonion.xml) is the shape reference.
+  fictitious. The live snapshot (reddit-nottheonion.xml) is the shape reference:
+  link posts have no <div class="md"> (empty summary), self posts do.
 
   Test cases:
-    t3_pmm0001  "Florida" in the title          -> matches keyword "florida"
-    t3_pmm0002  "florida" only in the content   -> matches (summary match, case-insensitive)
-    t3_pmm0003  no keyword                      -> must NOT match
+    t3_pmm0001  link post, "Florida" in the title  -> matches keyword "florida"
+    t3_pmm0002  self post, "florida" only in the md body -> matches (summary match, case-insensitive)
+    t3_pmm0003  link post, no keyword              -> must NOT match
     t3_pmm0004  HTML entities in title/content  -> parser must decode &amp; etc.
 -->
 <feed xmlns="http://www.w3.org/2005/Atom" xmlns:media="http://search.yahoo.com/mrss/">
@@ -27,7 +28,7 @@
       <uri>https://www.reddit.com/user/pmm_fixture_user1</uri>
     </author>
     <category term="nottheonion" label="r/nottheonion"/>
-    <content type="html">&lt;!-- SC_OFF --&gt;&lt;div class="md"&gt;&lt;p&gt;Submitted link.&lt;/p&gt;&lt;/div&gt;&lt;!-- SC_ON --&gt; &amp;#32; submitted by &amp;#32; &lt;a href="https://www.reddit.com/user/pmm_fixture_user1"&gt; /u/pmm_fixture_user1 &lt;/a&gt;</content>
+    <content type="html">&lt;table&gt; &lt;tr&gt;&lt;td&gt; &amp;#32; submitted by &amp;#32; &lt;a href=&quot;https://www.reddit.com/user/pmm_fixture_user1&quot;&gt; /u/pmm_fixture_user1 &lt;/a&gt; &lt;br/&gt; &lt;span&gt;&lt;a href=&quot;https://example.com/pmm-fixture-1&quot;&gt;[link]&lt;/a&gt;&lt;/span&gt; &amp;#32; &lt;span&gt;&lt;a href=&quot;https://www.reddit.com/r/nottheonion/comments/pmm0001/florida_man_tries_to_pay_parking_fine_with_alligator/&quot;&gt;[comments]&lt;/a&gt;&lt;/span&gt; &lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;</content>
     <id>t3_pmm0001</id>
     <link href="https://www.reddit.com/r/nottheonion/comments/pmm0001/florida_man_tries_to_pay_parking_fine_with_alligator/"/>
     <updated>2026-10-19T14:20:00+00:00</updated>
@@ -41,7 +42,7 @@
       <uri>https://www.reddit.com/user/pmm_fixture_user2</uri>
     </author>
     <category term="nottheonion" label="r/nottheonion"/>
-    <content type="html">&lt;!-- SC_OFF --&gt;&lt;div class="md"&gt;&lt;p&gt;The incident happened at a beach town in florida last weekend.&lt;/p&gt;&lt;/div&gt;&lt;!-- SC_ON --&gt; &amp;#32; submitted by &amp;#32; &lt;a href="https://www.reddit.com/user/pmm_fixture_user2"&gt; /u/pmm_fixture_user2 &lt;/a&gt;</content>
+    <content type="html">&lt;!-- SC_OFF --&gt;&lt;div class=&quot;md&quot;&gt;&lt;p&gt;The incident happened at a beach town in florida last weekend.&lt;/p&gt;&lt;/div&gt;&lt;!-- SC_ON --&gt; &amp;#32; submitted by &amp;#32; &lt;a href=&quot;https://www.reddit.com/user/pmm_fixture_user2&quot;&gt; /u/pmm_fixture_user2 &lt;/a&gt;</content>
     <id>t3_pmm0002</id>
     <link href="https://www.reddit.com/r/nottheonion/comments/pmm0002/town_council_votes_to_make_sandcastles_official/"/>
     <updated>2026-10-19T13:45:00+00:00</updated>
@@ -55,7 +56,7 @@
       <uri>https://www.reddit.com/user/pmm_fixture_user3</uri>
     </author>
     <category term="nottheonion" label="r/nottheonion"/>
-    <content type="html">&lt;!-- SC_OFF --&gt;&lt;div class="md"&gt;&lt;p&gt;Submitted link.&lt;/p&gt;&lt;/div&gt;&lt;!-- SC_ON --&gt; &amp;#32; submitted by &amp;#32; &lt;a href="https://www.reddit.com/user/pmm_fixture_user3"&gt; /u/pmm_fixture_user3 &lt;/a&gt;</content>
+    <content type="html">&lt;table&gt; &lt;tr&gt;&lt;td&gt; &amp;#32; submitted by &amp;#32; &lt;a href=&quot;https://www.reddit.com/user/pmm_fixture_user3&quot;&gt; /u/pmm_fixture_user3 &lt;/a&gt; &lt;br/&gt; &lt;span&gt;&lt;a href=&quot;https://example.com/pmm-fixture-3&quot;&gt;[link]&lt;/a&gt;&lt;/span&gt; &amp;#32; &lt;span&gt;&lt;a href=&quot;https://www.reddit.com/r/nottheonion/comments/pmm0003/library_fines_patron_for_returning_book_too_early/&quot;&gt;[comments]&lt;/a&gt;&lt;/span&gt; &lt;/td&gt;&lt;/tr&gt;&lt;/table&gt;</content>
     <id>t3_pmm0003</id>
     <link href="https://www.reddit.com/r/nottheonion/comments/pmm0003/library_fines_patron_for_returning_book_too_early/"/>
     <updated>2026-10-19T12:10:00+00:00</updated>
@@ -69,7 +70,7 @@
       <uri>https://www.reddit.com/user/pmm_fixture_user4</uri>
     </author>
     <category term="nottheonion" label="r/nottheonion"/>
-    <content type="html">&lt;!-- SC_OFF --&gt;&lt;div class="md"&gt;&lt;p&gt;Officials say the &amp;quot;robot &amp;amp; goose&amp;quot; standoff lasted 40 minutes.&lt;/p&gt;&lt;/div&gt;&lt;!-- SC_ON --&gt;</content>
+    <content type="html">&lt;!-- SC_OFF --&gt;&lt;div class=&quot;md&quot;&gt;&lt;p&gt;Officials say the &amp;quot;robot &amp;amp; goose&amp;quot; standoff lasted 40 minutes.&lt;/p&gt;&lt;/div&gt;&lt;!-- SC_ON --&gt;</content>
     <id>t3_pmm0004</id>
     <link href="https://www.reddit.com/r/nottheonion/comments/pmm0004/delivery_robot_and_goose_standoff/"/>
     <updated>2026-10-19T11:05:00+00:00</updated>

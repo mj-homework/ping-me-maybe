@@ -4,6 +4,7 @@
 > All timestamps: Europe/Budapest, `YYYY-MM-DD HH:mm`.
 > **Last updated:** 2026-10-19 15:51 – aligned with `assumptions.md` after AI review (sources, Slack priority, admin actions, Reddit score).
 > **Updated:** 2026-10-19 16:59 – feed URLs and Reddit access verified (User-Agent required, Reddit is Atom); fixtures listed; open questions 1–2 closed.
+> **Updated:** 2026-10-19 17:53 – M4: acceptance criterion for multi-keyword rules (keywords OR-ed, ADR-014).
 
 Related decisions: ADR-007 (sources), ADR-008 (definition of "important"), ADR-009 (dedup), ADR-010 (replay adapter), ADR-011 (channel order).
 
@@ -97,6 +98,7 @@ A logged-in user defines **alert rules** over news feeds. When a new item from *
 - And a `deliveries/{eventId}_{ruleId}_email` document exists with status `sent`
 - And re-ingesting / re-polling the same event sends **nothing** (S4).
 - Keyword matching is case-insensitive.
+- A rule with several keywords matches when any one of them appears.
 - If the SMTP server is unreachable, the delivery is `failed` with a readable reason, not a crash (A13).
 
 **M5 – Admin view**

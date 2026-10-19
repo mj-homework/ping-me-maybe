@@ -3,6 +3,7 @@
 > **Phase 3 output.** Data model, interfaces and pipeline for the MVP in `scope.md`.
 > All timestamps: Europe/Budapest, `YYYY-MM-DD HH:mm`.
 > **Accepted:** 2026-10-19 17:26 (prompt #7). Deviations from earlier ADRs/assumptions are recorded in ADR-013.
+> **Updated:** 2026-10-19 17:53 – matcher: any keyword (ADR-014); rules `createdAt`/`userId` constraints; Reddit content count corrected (prompt #8).
 
 ## 1. Firestore collections
 
@@ -63,6 +64,8 @@ Recipients (email address, Slack webhook) are **never** stored in deliveries; th
 | rules | CRUD own (`userId == auth.uid`, validated shape) | read all *(C4: update `active`)* | read |
 | deliveries | read own | read all *(C2: retry via callable)* | create / update |
 
+**`rules` write constraints:** on create, `createdAt == request.time` and `userId == request.auth.uid`; on update, `createdAt` and `userId` are immutable. Reason: the A5 filter (`rule.createdAt < event.ingestedAt`) depends on `createdAt`, so a client must not be able to backdate a rule.
+
 ## 2. Interfaces
 
 ```ts
@@ -102,7 +105,7 @@ const channelRegistry: Record<ChannelId, NotificationChannel>;
 
 The channel resolves its own recipient, so the dispatcher never knows about email addresses or webhooks – that is what lets the Slack commit leave dispatcher code untouched (ADR-011).
 
-**Feed parsing:** `parseFeed(xml)` parses once and selects a mapper by root element (`rss.channel.item[]` vs `feed.entry[]`). Reddit summary = text of `<div class="md">` if present, otherwise empty – 23 of 25 live entries are link posts whose `<content>` is only "submitted by … [link] [comments]" boilerplate.
+**Feed parsing:** `parseFeed(xml)` parses once and selects a mapper by root element (`rss.channel.item[]` vs `feed.entry[]`). Reddit summary = text of `<div class="md">` if present, otherwise empty – 24 of 25 live entries have no `<div class="md">` (23 link posts with a `<table>` of "submitted by … [link] [comments]" boilerplate, 1 with only the "submitted by" text).
 
 ## 3. Pipeline
 
@@ -120,7 +123,7 @@ The channel resolves its own recipient, so the dispatcher never knows about emai
                                       │ load active rules (in memory, A17)
                                       │ filter: sourceId ∈ rule.sourceIds
                                       │         AND rule.createdAt < event.ingestedAt  (A5)
-                                      │         AND every keyword in title+summary (case-insensitive)
+                                      │         AND any keyword in title+summary (case-insensitive)
                                       ▼
                          deliveries.doc(`${eventId}_${ruleId}_${ch}`).create({status:'pending'})
                                       │                       ◄─ IDEMPOTENCY 2: trigger re-run creates nothing new

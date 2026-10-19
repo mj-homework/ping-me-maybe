@@ -114,6 +114,20 @@ Record of how AI-generated output was reviewed: what was checked, and what was c
 ### 2026-10-19 17:07 – Curated replay fixture for r/nottheonion (planning chat)
 
 - **What the AI produced:** A hand-made Atom fixture `fixtures/reddit-nottheonion.demo.xml` with four fictitious entries: keyword in the title, keyword only in the content (lower case), no keyword, and HTML entities in the title/content.
-- **What I checked:** [FILL IN: compared its structure with the live snapshot `fixtures/reddit-nottheonion.xml` – element names, `<id>` format (`t3_…`), `<content type="html">`, date format]
-- **What I changed / rejected:** Kept it **in addition to** the live snapshot, not instead of it: the live snapshot is the shape reference for the parser test; the curated file only provides deterministic match / no-match cases for the matcher tests and the demo (`florida` rule in the demo script). [FILL IN: any differences found and fixed]
+- **What I checked:** Compared it with the live snapshot `fixtures/reddit-nottheonion.xml`. The `<id>` format (`t3_…`), date format and `<content type="html">` matched. The link-post structure did not: live link posts have no `<div class="md">` (only a table with "submitted by", `[link]` and `[comments]`), but the curated file wrapped "Submitted link." in an md div, which would have given link posts a made-up summary.
+- **What I changed / rejected:** Kept it **in addition to** the live snapshot, not instead of it: the live snapshot is the shape reference for the parser test; the curated file only provides deterministic match / no-match cases for the matcher tests and the demo (`florida` rule in the demo script). Rewrote the two link-post entries (`t3_pmm0001`, `t3_pmm0003`) to the live structure; the two self-post entries keep their md div.
 - **Why:** ADR-010 rejected hand-written fake data as the *only* test data because it would not reflect real feed shapes. A live snapshot cannot guarantee a `florida` item exists, so the demo and matcher tests need a controlled file – but its shape must be checked against the real feed, not trusted.
+
+### 2026-10-19 17:53 – BBC guid `#N` suffix is not a stable ID (prompt #7)
+
+- **What the AI produced:** While reading the fixtures for `design.md`, the finding that `fixtures/bbc-business.xml` contains the same article twice: `…/articles/c60rl1xvjv89o#0` and `…#3`, same title and `pubDate`.
+- **What I checked:** [FILL IN]
+- **What I changed / rejected:** ADR-013 point 2: BBC `externalId` = guid with the trailing `#N` suffix stripped.
+- **Why:** Using the raw guid as the dedup key would create two events for one story and send two notifications – it would break S4.
+
+### 2026-10-19 17:53 – Keyword matching AND → OR (prompt #8)
+
+- **What the AI produced:** `design.md` (prompt #7) with the matcher filter "every keyword in title+summary", i.e. AND over keywords, following A7.
+- **What I checked:** The demo script in `scope.md`: the rule "BBC World, keywords `earthquake, flood`".
+- **What I changed / rejected:** Keywords are OR-ed (ADR-014); A7, `design.md` and `scope.md` (M4) updated.
+- **Why:** [FILL IN]

@@ -363,3 +363,28 @@ Writing `design.md` (prompt #7) required concrete choices that earlier documents
 - Event IDs are not human-readable beyond the source prefix; `externalId` is kept as a field for debugging.
 - The meaning of BBC's `#N` suffix is unknown. If it marks a substantial story update, those updates are now deliberately not re-notified.
 - A12 wording ("ChannelAdapter") is outdated; `NotificationChannel` is the name used in code.
+
+## ADR-014: Rule keywords are OR-ed
+
+- **Status:** accepted
+- **Date:** 2026-10-19 17:53
+- **Amends:** ADR-008; assumption A7 ("AND logic only")
+
+### Context
+
+A7 stated "AND logic only", and `design.md` (prompt #7) implemented it as "every keyword in title+summary". The demo rule in `scope.md` ("BBC World, keywords `earthquake, flood`") would then only fire for an item mentioning both – almost never. The M4 acceptance test uses a single keyword, so it would not have caught this.
+
+### Decision
+
+A rule matches if the event's source is in `rule.sourceIds` **and any** of `rule.keywords` appears in title + summary (case-insensitive). Conditions across fields (source AND keywords) stay AND-ed; keywords within a rule are OR-ed.
+
+### Alternatives rejected
+
+- **AND over keywords** – makes the multi-keyword demo rule practically never fire; users expect a keyword list to mean "any of these".
+- **Per-rule AND/OR toggle** – more UI and test surface than the MVP needs; a user who needs AND can approximate it with a phrase.
+
+### Consequences
+
+- New M4 acceptance criterion: a rule with several keywords matches when any one of them appears.
+- Broader matching → more false positives (already accepted in ADR-008) and more alerts per poll (A9 noise risk).
+- This is a separate ADR rather than an amendment to ADR-013: it changes what "important" means (product, ADR-008/A7), not a technical design detail, and ADR-013 was already accepted.

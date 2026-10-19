@@ -288,3 +288,93 @@ Firebase API), say so instead of guessing.
 
 - **Outcome:** Proposal in chat, then on approval: `process/design.md` (collections, access table, interfaces, pipeline, dependency list, open points) and ADR-013 in `decisions.md`. While reading the fixtures the AI found that BBC guids are not unique per story (`c60rl1xvjv89o#0` and `#3` in `bbc-business.xml`) and that 23 of 25 live Reddit entries have only link-post boilerplate in `<content>`; both shaped the design. Flagged as unverified: `firebase-functions` v7 import paths, `onCall` auth in the emulator, the `create()` error code, `fast-xml-parser` HTML-entity handling. Flagged as unsolved: demo step 6 (replay data is deduplicated). No dependencies installed, no code written.
 - **Verdict:** accepted
+
+### #8
+
+- **Timestamp:** 2026-10-19 17:53
+- **Tool:** Claude Code (WebStorm)
+- **Prompt:**
+
+````text
+Process-doc updates only. Do NOT write code, install anything or touch
+fixtures/. Ask me for every timestamp before writing it (CLAUDE.md rule).
+
+1. Keyword logic – my decision: a rule matches if the event's source is
+   in rule.sourceIds AND ANY of rule.keywords appears in title+summary
+   (case-insensitive). Keywords are OR-ed, not AND-ed.
+   Reason: the demo rule "earthquake, flood" would almost never fire
+   with AND; the M4 single-keyword test would not have caught this.
+   - assumptions.md A7: replace "AND logic only" with the rule above,
+     add an "Updated" header line.
+   - design.md: fix the matcher filter in the pipeline diagram
+     ("every keyword" → "any keyword").
+   - scope.md: add an M2/M4 acceptance criterion:
+     "A rule with several keywords matches when any one of them appears."
+   - decisions.md: amend ADR-013 (or add ADR-014 if you think it is a
+     separate decision – tell me which and why).
+
+2. A12 in assumptions.md: rename ChannelAdapter → NotificationChannel,
+   with a note "(renamed, ADR-013)". Add an "Updated" header line.
+
+3. design.md factual fix: the live fixtures/reddit-nottheonion.xml has
+   25 entries, of which only 1 is a self post with <div class="md">.
+   Correct "23 of 25 … link posts" to "24 of 25". Verify it by reading
+   the file, don't take my word for it.
+
+4. design.md access table / rules notes: on create, rules.createdAt must
+   equal request.time and userId must equal request.auth.uid; on update,
+   createdAt and userId are immutable. Reason: the A5 filter
+   (rule.createdAt < event.ingestedAt) depends on createdAt, so a client
+   must not be able to backdate a rule.
+
+5. ai-review-log.md – add two entries, leave my parts as [FILL IN]:
+   a) BBC guid #N suffix (prompt #7): What the AI produced = the finding
+      that c60rl1xvjv89o#0 and #3 are the same article; What I checked =
+      [FILL IN]; What I changed = ADR-013 point 2; Why = raw guid would
+      break S4.
+   b) Keyword AND→OR (this prompt): What the AI produced = design.md
+      matcher with AND over keywords; What I checked = the demo script
+      in scope.md; What I changed = OR, per point 1; Why = [FILL IN].
+
+6. Still open, do NOT solve now: demo step 6 (replay data is
+   deduplicated). Leave it in design.md "Open points".
+
+Log this prompt in prompts.md with the next number. When done, show me
+a short summary of every file you changed – I review before committing.
+````
+
+  Follow-up: "write 17:53 in all"
+
+- **Outcome:** A7 rewritten (keywords OR-ed, status Confirmed) and A12 renamed in `assumptions.md`; M4 criterion added in `scope.md`; `design.md` matcher fixed, `rules` write constraints added, Reddit count corrected; ADR-014 added (separate from ADR-013 because it changes the product meaning of "important", ADR-008/A7, and ADR-013 was already accepted); two `ai-review-log.md` entries with `[FILL IN]` parts. Point 3 verified with a script over the live fixture: 24 of 25 entries have no `<div class="md">`, but the split is 23 link posts (`<table>`) + 1 entry with only "submitted by" text (`t3_1x9a22q`) – the prompt #7 count of 23 was an AI miscount (only `<table>` entries were counted). Not changed: `fixtures/reddit-nottheonion.demo.xml` had uncommitted changes from outside this prompt; left untouched.
+- **Verdict:** accepted
+
+### #9
+
+- **Timestamp:** 2026-10-19 18:02
+- **Tool:** Claude Code (WebStorm)
+- **Prompt:**
+
+````text
+7. ai-review-log.md, entry "2026-10-19 17:07 – Curated replay fixture
+   for r/nottheonion": replace the two [FILL IN] parts with:
+   - What I checked: Compared it with the live snapshot
+     fixtures/reddit-nottheonion.xml. The <id> format (t3_…), date
+     format and <content type="html"> matched. The link-post structure
+     did not: live link posts have no <div class="md"> (only a table
+     with "submitted by", [link] and [comments]), but the curated file
+     wrapped "Submitted link." in an md div, which would have given
+     link posts a made-up summary.
+   - What I changed / rejected: Rewrote the two link-post entries
+     (t3_pmm0001, t3_pmm0003) to the live structure; the two self-post
+     entries keep their md div.
+
+8. I have already replaced fixtures/reddit-nottheonion.demo.xml myself
+   with the corrected version. Do not edit it, but read it and confirm
+   that t3_pmm0001 and t3_pmm0003 have no <div class="md"> and that
+   t3_pmm0002 and t3_pmm0004 do. Report any mismatch.
+````
+
+  Follow-ups: "#9 now", "#9 18:02"
+
+- **Outcome:** Both `[FILL IN]` parts of the 17:07 review entry replaced with the given text; the existing "Kept it in addition to…" sentence kept. The fixture was read but not edited, and the check confirmed it: `t3_pmm0001` and `t3_pmm0003` have a `<table>` and no md div, while `t3_pmm0002` and `t3_pmm0004` have the md div. All four have `<content type="html">`, `t3_…` IDs and the live date format. No mismatch. Minor note, left as is: `t3_pmm0004` lacks the "submitted by" text that the live self post `t3_1x8qstr` has after its md div; it does not affect the summary (md div text only). The AI did not take a timestamp from the system clock because it showed 16:02, inconsistent with the 17:53 entries, and asked instead.
+- **Verdict:** accepted
