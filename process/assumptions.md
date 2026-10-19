@@ -1,7 +1,50 @@
-# Assumptions
+# Assumptions — Ping Me Maybe
 
-Open questions about the brief and the assumptions made to move forward, with their reasoning and status.
+> Phase 1: disambiguating the brief. Each item is a question I would ask the PM, plus the assumption I'm building on until told otherwise.
+> Agreed in planning chat: 2026-10-19 14:46 – 14:57 (Europe/Budapest).
+> Status: **Confirmed** = explicitly decided by me · **Default** = proposed, accepted without change.
 
-| Question | Assumption | Why | Status |
-| -------- | ---------- | --- | ------ |
-|          |            |     |        |
+## What & where from
+
+| # | Question | Assumption | Status |
+|---|---|---|---|
+| A1 | What counts as "something important"? | Importance is **user-defined via rules**, not decided by the system. A rule matches on source/category + keyword conditions on title/summary. No ML / "AI importance" scoring. | Default |
+| A2 | Which sources? | Two **real** RSS feeds, no API keys: **BBC Business** (economic news) and **Reddit r/nottheonion** (the playful one). Earthquakes (USGS) rejected: unlikely to produce a relevant event during a demo. Recorded feed snapshots are used as test fixtures. Exact feed URLs and Reddit's access rules (User-Agent, rate limits) to be verified before implementation. | Confirmed |
+| A3 | What is a normalized event? | `{ sourceId, externalId, category, title, summary, url, publishedAt, attributes{} }`. Dedup key: `sourceId + externalId` (RSS `guid`/link). | Default |
+| A4 | How fresh must alerts be? | Polling every few minutes + admin "Fetch now". No real-time push/streaming. | Default |
+| A5 | Do new rules match past events? | No — only events ingested after the rule exists. | Default |
+
+## Users & rules
+
+| # | Question | Assumption | Status |
+|---|---|---|---|
+| A6 | Who are the users? | Anyone who signs up with email/password (Firebase Auth). Single tenant, no teams. | Default |
+| A7 | What can a rule express? | Name, source/category, keywords, channel(s), active toggle. AND logic only. | Default |
+| A9 | Noise control (bursts of matching news)? | Out of MVP: no digests, throttling, quiet hours. Known risk; per-rule cooldown is the first candidate. | Default |
+
+*(A8 — geographic filtering — dropped together with the earthquake source.)*
+
+## Channels
+
+| # | Question | Assumption | Status |
+|---|---|---|---|
+| A10 | Email to where? | The user's account email. Locally delivered to Mailpit/Ethereal; nothing real is sent. **Email is the primary MVP channel.** | Confirmed |
+| A11 | Slack how? | **Deferred to the end (stretch goal).** If built: user pastes their own incoming webhook URL. Known downsides: the URL is a secret (leak = anyone can post), clunky setup for users, fixed channel, silent failure if revoked. | Confirmed |
+| A12 | What does "add more channels later" mean? | `ChannelAdapter` interface + registry. New channel = one adapter + one registration line; matching code untouched. Slack later is the proof. | Default |
+| A13 | Failed deliveries? | Recorded with status + error; no automatic retry in MVP; visible in admin view. | Default |
+| A14 | Duplicate notifications? | At most one delivery per `event × rule × channel`: deterministic ID `{eventId}_{ruleId}_{channel}` + `create()`. | Default |
+
+## Admin
+
+| # | Question | Assumption | Status |
+|---|---|---|---|
+| A15 | What is the admin view? | Views: ingested events, delivery log, all users' rules, sources + "Fetch now" (works from day one). **Write actions (e.g. disable rule, retry delivery) are present in the UI but disabled** in the first round; enabled one by one as time allows. | Confirmed |
+| A16 | How does someone become admin? | `admin: true` custom claim set by a seed script against the emulator. No in-app role management. | Default |
+
+## Non-functional
+
+| # | Question | Assumption | Status |
+|---|---|---|---|
+| A17 | Scale? | Demo scale. Load active rules and match in memory; documented as the first thing to change at scale. | Default |
+| A18 | Language / time? | English UI. Store UTC, display local time. | Default |
+| A19 | Data retention? | Not handled in MVP. | Default |
