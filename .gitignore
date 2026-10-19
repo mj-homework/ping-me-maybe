@@ -42,3 +42,13 @@ __screenshots__/
 # System files
 .DS_Store
 Thumbs.db
+
+# Firebase
+/functions/lib/
+/functions/node_modules/
+*-debug.log
+/emulator-data/
+firebase-export-*/
+
+# Environment files
+.env*
