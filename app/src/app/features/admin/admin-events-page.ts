@@ -15,7 +15,7 @@ const MAX_EVENTS = 50;
     } @else if (loading()) {
       <p>Loading…</p>
     } @else {
-      <p>Newest {{ events().length }} events (max {{ maxEvents }}), by ingestion time.</p>
+      <p>Newest {{ events().length }} events (max {{ maxEvents }}), by published time.</p>
       <table>
         <thead>
           <tr>

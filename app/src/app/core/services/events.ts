@@ -25,13 +25,17 @@ interface EventDoc {
 export class EventsService {
   private readonly db = inject(FIRESTORE);
 
-  /** Live list of the newest events by `ingestedAt`. Returns the unsubscribe function. */
+  /**
+   * Live list of the newest events by `publishedAt`. One poll gives all its events nearly the
+   * same `ingestedAt`, so that order would look random. The parser drops items without a valid
+   * date, so `orderBy` leaves no event out. Returns the unsubscribe function.
+   */
   watchLatest(
     max: number,
     next: (events: EventListItem[]) => void,
     error: (err: Error) => void,
   ): Unsubscribe {
-    const q = query(collection(this.db, 'events'), orderBy('ingestedAt', 'desc'), limit(max));
+    const q = query(collection(this.db, 'events'), orderBy('publishedAt', 'desc'), limit(max));
     return onSnapshot(q, (snapshot) => next(snapshot.docs.map(toListItem)), error);
   }
 }
