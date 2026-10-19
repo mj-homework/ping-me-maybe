@@ -146,7 +146,7 @@ Record of how AI-generated output was reviewed: what was checked, and what was c
 - **What I changed / rejected:** ADR-015 – Angular moved to `app/`.
 - **Why:** The claim was presented as fact but was only how `firebase init` happened to lay out this repo.
 
-### time not given – CRLF line endings after git restore (Windows) (prompt #15)
+### 2026-10-19 21:33 – CRLF line endings after git restore (Windows) (prompt #15)
 
 - **What the AI produced:** nothing – a tooling issue found while reviewing a formatting change.
 - **What I checked:** Check (me): `npm run lint` after `git restore` – 124 linebreak-style errors; git wrote CRLF on Windows (`core.autocrlf`).
