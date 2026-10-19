@@ -239,3 +239,52 @@ When done: show me the full diff and list every remaining [FILL IN] placeholder 
 
 - **Outcome:** `.firebaserc` default project set to `demo-ping-me-maybe`; `firestore.rules` replaced with deny-all (`allow read, write: if false;`) plus the requested comment; ADR-007 reason copied from A2; four repo-review entries appended to `ai-review-log.md`; `admin-page.ts` untouched. Delegating the rules change to the `firestore-rules-author` subagent failed (its tool list uses another IDE's tool names, so Claude Code refused to spawn it with zero tools), so the dictated rule was written directly. Validation via the Firebase MCP rules validator was not possible (HTTP 403: the `demo-` project has no access to the cloud API).
 - **Verdict:** accepted
+
+### #7
+
+- **Timestamp:** 2026-10-19 17:26
+- **Tool:** Claude Code (WebStorm)
+- **Prompt:**
+
+````text
+Read: CLAUDE.md, process/assumptions.md, process/scope.md,
+process/decisions.md, the last two entries of process/ai-review-log.md,
+and look at the files in fixtures/.
+
+Do NOT write code and do NOT create any files yet. Propose the content
+of a concise process/design.md (max. ~1.5 pages):
+
+1. Firestore collections: events, rules, deliveries, sources.
+   - fields with types,
+   - document ID strategy,
+   - a table of who can read / write (user on own documents, admin,
+     Cloud Functions only).
+2. TypeScript interface signatures: SourceAdapter, Event and the
+   notification channel interface.
+3. The pipeline as an ASCII diagram:
+   poll → normalize → events create → trigger → match →
+   deliveries create → send
+   For each step: which Function (and its trigger type), how errors
+   are handled, and where idempotency is guaranteed.
+
+Give an explicit decision with a one-sentence reason for each of these:
+- What should the events document ID be, given that externalId can be
+  a URL (BBC guid) or a t3_… value (Reddit Atom <id>)?
+- How does one parser handle both RSS 2.0 and Atom?
+- Which new npm dependencies are needed (functions and frontend), and
+  why those? Do not install anything, just list them.
+- pollSourcesNow: onRequest or onCall, and how does it check the
+  admin claim?
+- Channel interface name: A12 says "ChannelAdapter", ADR-011 says
+  "NotificationChannel". Which one?
+- Does the source list live in Firestore or in code?
+
+Mark where you deviate from scope.md or the ADRs, and where you made a
+non-trivial decision. If you are unsure about something (e.g. a
+Firebase API), say so instead of guessing.
+````
+
+  Follow-up: "i approve with timestamp 17:26"
+
+- **Outcome:** Proposal in chat, then on approval: `process/design.md` (collections, access table, interfaces, pipeline, dependency list, open points) and ADR-013 in `decisions.md`. While reading the fixtures the AI found that BBC guids are not unique per story (`c60rl1xvjv89o#0` and `#3` in `bbc-business.xml`) and that 23 of 25 live Reddit entries have only link-post boilerplate in `<content>`; both shaped the design. Flagged as unverified: `firebase-functions` v7 import paths, `onCall` auth in the emulator, the `create()` error code, `fast-xml-parser` HTML-entity handling. Flagged as unsolved: demo step 6 (replay data is deduplicated). No dependencies installed, no code written.
+- **Verdict:** accepted

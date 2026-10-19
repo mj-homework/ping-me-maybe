@@ -327,3 +327,39 @@ After the AI review of `scope.md` against `assumptions.md` (A1, A2, A3, A11, A15
 - The ADR-009 consequence "more Firestore reads per poll for re-checking recent Reddit posts" no longer applies.
 - If Slack is not built, the channel abstraction is argued in the README instead of proven by a commit diff (scope cut line 3).
 - Reddit RSS access rules (User-Agent, rate limits) still have to be verified (see `ai-review-log.md`, OPEN item).
+
+## ADR-013: Design refinements – event ID hashing, BBC guid normalization, onCall, source config in code
+
+- **Status:** accepted
+- **Date:** 2026-10-19 17:26
+- **Amends:** ADR-005, ADR-009, ADR-012 (point 3); assumptions A3, A12
+
+### Context
+
+Writing `design.md` (prompt #7) required concrete choices that earlier documents left open or stated differently:
+
+- ADR-009/012 define the event ID as `{sourceId}_{externalId}`, but `externalId` can be a URL (BBC guid), and Firestore document IDs cannot contain `/`.
+- `fixtures/bbc-business.xml` contains the same article twice with different guids: `…/articles/c60rl1xvjv89o#0` and `…#3` (same title, same `pubDate`). Using the raw guid (A3) would create two events and send two notifications.
+- ADR-005 and M6 say "HTTP function" without specifying how the admin claim is checked.
+- A12 names the channel interface `ChannelAdapter`, ADR-011 names it `NotificationChannel`.
+
+### Decision
+
+1. **Event ID** = `{sourceId}_{first 32 hex chars of sha256(externalId)}`. The raw `externalId` is stored as a field.
+2. **BBC `externalId`** = guid with the trailing `#N` suffix stripped. Reddit uses the Atom `<id>` (`t3_…`) unchanged.
+3. **`pollSourcesNow` is an `onCall` function** checking `request.auth?.token.admin === true`; still an HTTPS function in the sense of ADR-005.
+4. **Channel interface name: `NotificationChannel`** (ADR-011 wins over A12).
+5. **Source definitions live in code**, runtime state (`enabled`, last poll, last error) in the `sources` collection. Replay mode is a Functions param `SOURCE_MODE=live|replay`.
+
+### Alternatives rejected
+
+- **Raw `externalId` as ID with `/` replaced** – escaping rules are easy to get wrong and IDs can approach the 1500-byte limit; hashing is uniform for URLs and `t3_…` values.
+- **Raw BBC guid as `externalId`** – proven non-unique per story by the fixture (duplicate notification, breaks S4).
+- **`onRequest` with manual `verifyIdToken`** – needs Authorization header handling and CORS that `onCall` provides.
+- **Source list in Firestore** – URLs and adapter wiring need a code change anyway; a seed step adds setup for reviewers.
+
+### Consequences
+
+- Event IDs are not human-readable beyond the source prefix; `externalId` is kept as a field for debugging.
+- The meaning of BBC's `#N` suffix is unknown. If it marks a substantial story update, those updates are now deliberately not re-notified.
+- A12 wording ("ChannelAdapter") is outdated; `NotificationChannel` is the name used in code.
