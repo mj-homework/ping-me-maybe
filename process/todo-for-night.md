@@ -7,14 +7,17 @@ Goal: one thin, visible end-to-end slice. After every step I look at something b
 - `pollSourcesNow` in **replay mode** writes the fixture events into Firestore (`create()` dedup).
 - **I see:** documents in the `events` collection in the Emulator UI.
 
-## 2. Event list on `/alerts` (~45 min)
+## 2. Login + admin event list on `/admin/events` (~45 min)
 
-- Angular reads the `events` collection and lists them.
-- **I see:** BBC and Reddit headlines in the browser.
+- Emulator login (email/password) + sign-out; `admin` claim guard.
+- Angular reads the `events` collection (admin only, `firestore.rules`) and lists them.
+- **I see:** BBC and Reddit headlines in the browser, as admin.
 
-## 3. Simple login + create a rule (~1 h)
+Decided by me: "Users cannot read events (design.md §1), so step 2 shows them on an admin page, and login moves forward from step 3." (prompt #19)
 
-- Emulator login, a form: source(s) + keywords.
+## 3. Create a rule (~1 h)
+
+- A form: source(s) + keywords.
 - Minimal security rules: users read/write only their own rules.
 - **I see:** my own rule in the list.
 

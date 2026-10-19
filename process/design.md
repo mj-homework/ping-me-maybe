@@ -147,7 +147,7 @@ A crash between `send()` and the status write leaves the delivery in `sending` a
 
 ## 4. Dependencies (to be approved before installing)
 
-**Approved:** `fast-xml-parser` and `vitest` (dev) in `functions/` – installed by me, 2026-10-19 18:14 (prompt #11). The others are still pending.
+**Approved:** `fast-xml-parser` and `vitest` (dev) in `functions/` – installed by me, 2026-10-19 18:14 (prompt #11). `firebase` in `app/` – approved by me in prompt #19, 2026-10-19 23:05 ("add the modular `firebase` JS SDK"), installed by IDE Claude (13.0.0; install script allowed for `@firebase/util` only). The others are still pending.
 
 | Package | Where | Why |
 |---|---|---|

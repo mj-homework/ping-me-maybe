@@ -1,10 +1,38 @@
 rules_version='2'
 
+// ===============================================================
+// Assumed Data Model (design.md §1)
+// ===============================================================
+//
+// Collection: events
+// Document ID: {sourceId}_{first 32 hex chars of sha256(externalId)}
+// Fields: sourceId, externalId, category, title, summary, url (string);
+//   publishedAt, ingestedAt (timestamp); attributes (map<string, string>).
+// Written only by Cloud Functions (Admin SDK, bypasses rules). Clients never write.
+//
+// sources, rules, deliveries: not opened yet – denied by the catch-all below.
+//
+// ===============================================================
+
 service cloud.firestore {
   match /databases/{database}/documents {
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    // The `admin` custom claim; set only via the Admin SDK / Auth emulator, never by a client.
+    function isAdmin() {
+      return isAuthenticated() && request.auth.token.admin == true;
+    }
+
+    // Admin event list (/admin/events). No client writes.
+    match /events/{eventId} {
+      allow read: if isAdmin();
+    }
+
     match /{document=**} {
-      // Deny-all until real rules are written together with the data model.
-      // Client access is opened per collection later (see CLAUDE.md, ADR-001).
+      // Deny-all for every other path. Client access is opened per collection
+      // (events: admin read only); the other collections follow (CLAUDE.md, ADR-001).
       allow read, write: if false;
     }
   }

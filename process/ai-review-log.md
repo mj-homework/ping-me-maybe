@@ -152,3 +152,10 @@ Record of how AI-generated output was reviewed: what was checked, and what was c
 - **What I checked:** Check (me): `npm run lint` after `git restore` – 124 linebreak-style errors; git wrote CRLF on Windows (`core.autocrlf`).
 - **What I changed / rejected:** added `.gitattributes` with `* text=auto eol=lf` (635475b); `lint --fix` restored LF.
 - **Why:** reviewers on Windows would hit the same lint failure.
+
+### 2026-10-19 23:05 – `firebase` install script blocked by npm 12 (prompt #19)
+
+- **What the AI produced:** `npm install firebase` in `app/`.
+- **What I checked:** Check (IDE Claude, files): npm 12 skipped all install scripts; `@firebase/util/dist/index.esm.js` imports `./postinstall.mjs`, which only its postinstall script generates, so the bundle would break without it. Script read first: without `FIREBASE_WEBAPP_CONFIG` it only writes two files returning `undefined`, no network.
+- **What I changed / rejected:** `npm install-scripts approve @firebase/util` – only that package (`allowScripts` in `app/package.json`); the other blocked scripts (`msgpackr-extract`, `protobufjs`) stay off.
+- **Why:** [FILL IN]

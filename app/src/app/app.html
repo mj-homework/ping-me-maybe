@@ -1,1 +1,29 @@
+<header>
+  @if (!auth.ready()) {
+    <span>…</span>
+  } @else if (auth.user(); as user) {
+    <span>{{ user.email }}</span>
+    @if (auth.isAdmin()) {
+      <strong>admin</strong>
+      <a routerLink="/admin/events">Events</a>
+    }
+    <button type="button" (click)="signOut()">Sign out</button>
+  } @else {
+    <form (submit)="$event.preventDefault(); signIn(email.value, password.value)">
+      <input #email type="email" placeholder="Email" autocomplete="username" required />
+      <input
+        #password
+        type="password"
+        placeholder="Password"
+        autocomplete="current-password"
+        required
+      />
+      <button type="submit">Sign in</button>
+      <button type="button" (click)="signUp(email.value, password.value)">Create account</button>
+    </form>
+  }
+  @if (authError(); as message) {
+    <p role="alert">{{ message }}</p>
+  }
+</header>
 <router-outlet />

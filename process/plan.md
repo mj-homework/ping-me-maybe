@@ -14,6 +14,9 @@
   - [x] Part 2a: `pollAllSources` with `create()` dedup + `sources` status, `onCall pollSourcesNow` (replay only), `npm run poll:replay` dev script (prompt #17); tried against the emulator by me; unit tests with a fake Firestore (prompt #18)
   - [ ] Part 2b: live `FeedSourceAdapter` (User-Agent, timeout), `onSchedule`
 - [ ] M1 + M2 – auth, rule CRUD, security rules + rules tests
+  - [ ] Emulator login (email/password), sign-out – code in prompt #19, not yet tried in the browser
+  - [ ] Rule form + `rules` security rules; rules tests (morning)
+- [ ] M5 part: `/admin/events` list, `admin` guard, `events` admin-read rule – code in prompt #19, not yet tried in the browser
 - [ ] M4 – matcher, email (Mailpit), idempotency (S4)
 - [ ] M5 + M6 – admin view, Fetch now, guard
 - [ ] S1 – Slack (only if M4 passes)
@@ -26,8 +29,10 @@
 Decided by me: "Tonight a thin, visible slice in 4 steps – see todo-for-night.md."
 
 1. Replay poll → `events` in the Firestore emulator (prompt #17)
-2. Event list on `/alerts`
-3. Simple login + create a rule (minimal rules)
+2. Login + admin event list on `/admin/events` (prompt #19)
+3. Create a rule (minimal rules)
+
+Decided by me: "Users cannot read events (design.md §1), so step 2 shows them on an admin page, and login moves forward from step 3."
 4. Match → email in Mailpit
 
 If step 4 does not fit, it goes first in the morning; security-rules tests move to the morning.
