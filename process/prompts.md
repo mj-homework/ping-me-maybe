@@ -413,3 +413,12 @@ a short summary of every file you changed – I review before committing.
 - **Prompt:** Fill the remaining placeholders with the given text: ADR-007 date; the earthquake review entry (What I checked, Why, heading time 15:12 → 15:06); the prompt #5 mismatch entry; the BBC guid and keyword AND → OR entries; the `[hash]` in #5; the #12 follow-up wording. Log as #13, list leftover placeholders, show the diff and stop.
 - **Outcome:** All nine points applied with the given text. Cited commits exist with matching times: 0c4cba2 (15:06), 6ec2664 (16:01), 14f08fa (16:35). Not committed.
 - **Verdict:** [PENDING – my review]
+
+### #14
+
+- **Timestamp:** 2026-10-19 20:55
+- **Tool:** Claude Code (WebStorm)
+- **Prompt:** Restructure on a new branch `restructure-app`: `git mv` the Angular app (angular.json, package*.json, tsconfig*.json, src/, public/) into `app/`, next to `functions/`; reinstall in `app/`; fix paths in `.vscode/`, `.gitignore`, `firebase.json`, README, CLAUDE.md; verify builds/tests; ADR-015 (supersedes ADR-003); review-log entry on the "standard Firebase layout" claim; log as #14. Do not touch main, do not push, commit only after OK.
+- **Decided by me:** "I prefer app/ and functions/ side by side – two separate programs, not one inside the other."
+- **Outcome:** 22 files moved with `git mv` on `restructure-app`. Root `node_modules`, `dist/`, `.angular/` deleted; `npm install` in `app/`. Paths fixed in `.gitignore` (`/app/…`), `.vscode/tasks.json` (`path: app`, explicit labels so `launch.json` still resolves), README, CLAUDE.md; `firebase.json` has no Angular paths. `ng build` OK; `ng test` 1/2 – `app.spec.ts` "should render title" fails because `app.html` is only `<router-outlet />` since 39b10e4 (not caused by the move). Functions: build OK, 13/13 tests. ADR-015 date 2026-10-19 20:53 (given by me). Not committed.
+- **Verdict:** [PENDING – my review]

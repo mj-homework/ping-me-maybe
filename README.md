@@ -2,6 +2,8 @@
 
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 22.2.3.
 
+The Angular app lives in `app/`, next to the Cloud Functions in `functions/`. Run all Angular commands below from `app/` (`cd app`, then `npm install` once).
+
 ## Development server
 
 To start a local development server, run:
@@ -34,7 +36,7 @@ To build the project run:
 ng build
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+This will compile your project and store the build artifacts in the `app/dist/` directory. By default, the production build optimizes your application for performance and speed.
 
 ## Running unit tests
 

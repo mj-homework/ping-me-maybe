@@ -8,6 +8,7 @@
 - [x] Phase 1–2: `assumptions.md`, `scope.md`, ADR-001…012
 - [x] Config fixes (`.firebaserc`, deny-all `firestore.rules`), feeds verified with curl, fixtures captured
 - [x] Phase 3: `design.md` (accepted 17:26), ADR-013, ADR-014
+- [x] Restructure: Angular app moved to `app/`, next to `functions/` (ADR-015, prompt #14)
 - [ ] **M3 – Ingestion**
   - [x] Part 1: `parseFeed` (RSS + Atom), `ReplaySourceAdapter`, source config, `eventId`; 13 Vitest tests on all four fixtures (prompt #11)
   - [ ] Part 2: live `FeedSourceAdapter` (User-Agent, timeout), `pollAllSources` with `create()` dedup + `sources` status, `onSchedule` + `onCall pollSourcesNow` ← next

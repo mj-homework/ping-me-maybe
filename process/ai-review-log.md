@@ -138,3 +138,10 @@ Record of how AI-generated output was reviewed: what was checked, and what was c
 - **What I checked:** Check (planning chat): `git log` / `git show` of 03d207f against `prompts.md` and `plan.md`.
 - **What I changed / rejected:** Verdict reset to pending; hard rules for git, verdicts and scope added to CLAUDE.md. `event-id.ts` kept (ADR-013 needs it), but extras must be proposed, not implemented.
 - **Why:** The process log is graded; an AI-written "accepted" or "done" that I never confirmed makes the log untrustworthy.
+
+### 2026-10-19 20:55 – ADR-003 'standard Firebase layout' claim (planning chat)
+
+- **What the AI produced:** ADR-003 and the 13:39 review entry justified keeping Angular at the root as "the standard Firebase layout".
+- **What I checked:** Check (planning chat, 2026-10-19 20:53): firebase.google.com/docs/functions/organize-functions – it fixes `firebase.json` at the root and `functions/` source folders, nothing about the frontend location.
+- **What I changed / rejected:** ADR-015 – Angular moved to `app/`.
+- **Why:** The claim was presented as fact but was only how `firebase init` happened to lay out this repo.

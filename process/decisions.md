@@ -73,7 +73,7 @@ Use Firebase Auth, Cloud Firestore and Cloud Functions (TypeScript), developed a
 
 ## ADR-003: Angular stays at the repository root
 
-- **Status:** accepted
+- **Status:** superseded by ADR-015
 - **Date:** 2026-10-19 13:39
 
 ### Context
@@ -388,3 +388,26 @@ A rule matches if the event's source is in `rule.sourceIds` **and any** of `rule
 - New M4 acceptance criterion: a rule with several keywords matches when any one of them appears.
 - Broader matching → more false positives (already accepted in ADR-008) and more alerts per poll (A9 noise risk).
 - This is a separate ADR rather than an amendment to ADR-013: it changes what "important" means (product, ADR-008/A7), not a technical design detail, and ADR-013 was already accepted.
+
+## ADR-015: Angular app moves to app/, next to functions/
+
+- **Status:** accepted
+- **Date:** 2026-10-19 20:53
+- **Supersedes:** ADR-003
+
+### Context
+
+ADR-003 kept Angular at the root citing "the standard Firebase layout". The Firebase docs only fix `firebase.json` at the root and a `functions/` source folder; they say nothing about where the frontend lives.
+
+### Decision
+
+`app/` (Angular) and `functions/` (Cloud Functions) side by side. Firebase config (`firebase.json`, `.firebaserc`, `firestore.*`), `process/`, `CLAUDE.md` and `README.md` stay at the root.
+
+### Alternatives rejected
+
+- **Keep Angular at the root** – mixes the frontend's config and `node_modules` with the Firebase project config.
+
+### Consequences
+
+- Angular commands (`ng build`, `ng test`, `npm install`) run in `app/`.
+- Paths updated in `.gitignore`, `.vscode/tasks.json`, `README.md` and the `CLAUDE.md` Stack line and folder tree; historical process entries keep the old paths.

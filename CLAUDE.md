@@ -8,7 +8,7 @@ This is a job-interview homework project. The **process** is graded as well as t
 
 ## Stack
 
-- **Frontend:** Angular 22 (standalone components, Vite-based `@angular/build`, Vitest), at the repo root
+- **Frontend:** Angular 22 (standalone components, Vite-based `@angular/build`, Vitest), in `/app`
 - **Backend:** Firebase Auth, Cloud Firestore, Cloud Functions for Firebase (TypeScript, Node 24, in `/functions`)
 - **Local runtime:** Firebase Emulator Suite (Auth, Functions, Firestore, Emulator UI)
 - **Firebase project ID:** `demo-ping-me-maybe` (emulator-only, no real project and no billing)
@@ -16,8 +16,9 @@ This is a job-interview homework project. The **process** is graded as well as t
 ## Folder structure
 
 ```text
-/                     Angular app (angular.json, package.json, src/)
-src/app/
+/                     firebase.json, .firebaserc, firestore.*, CLAUDE.md, README.md
+app/                  Angular app (angular.json, package.json, tsconfig*.json, src/, public/)
+app/src/app/
   core/guards/        route guards (e.g. admin role guard)
   core/services/      app-wide singleton services (auth, Firestore access)
   core/models/        shared TypeScript types / interfaces
