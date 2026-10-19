@@ -14,9 +14,9 @@
   - [x] Part 2a: `pollAllSources` with `create()` dedup + `sources` status, `onCall pollSourcesNow` (replay only), `npm run poll:replay` dev script (prompt #17); tried against the emulator by me; unit tests with a fake Firestore (prompt #18)
   - [ ] Part 2b: live `FeedSourceAdapter` (User-Agent, timeout), `onSchedule`
 - [ ] M1 + M2 – auth, rule CRUD, security rules + rules tests
-  - [ ] Emulator login (email/password), sign-out – code in prompt #19, not yet tried in the browser
+  - [x] Emulator login (email/password), sign-out – code in prompt #19; tried in the browser by me, works (time not given)
   - [ ] Rule form + `rules` security rules; rules tests (morning)
-- [ ] M5 part: `/admin/events` list, `admin` guard, `events` admin-read rule – code in prompt #19, not yet tried in the browser
+- [x] M5 part: `/admin/events` list, `admin` guard, `events` admin-read rule – code in prompts #19/#20; tried in the browser by me, works (time not given)
 - [ ] M4 – matcher, email (Mailpit), idempotency (S4)
 - [ ] M5 + M6 – admin view, Fetch now, guard
 - [ ] S1 – Slack (only if M4 passes)
