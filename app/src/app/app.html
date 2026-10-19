@@ -1,16 +1,19 @@
 <header>
   @if (!auth.ready()) {
-    <span>…</span>
+    <span>Loading...</span>
   } @else if (auth.user(); as user) {
     <span>{{ user.email }}</span>
     @if (auth.isAdmin()) {
-      <strong>admin</strong>
+      <strong> (admin) </strong>
+      <span> - </span>
       <a routerLink="/admin/events">Events</a>
     }
+    <span> - </span>
     <button type="button" (click)="signOut()">Sign out</button>
   } @else {
     <form (submit)="$event.preventDefault(); signIn(email.value, password.value)">
       <input #email type="email" placeholder="Email" autocomplete="username" required />
+      <span> / </span>
       <input
         #password
         type="password"
@@ -18,7 +21,9 @@
         autocomplete="current-password"
         required
       />
+      <span> - </span>
       <button type="submit">Sign in</button>
+      <span> - </span>
       <button type="button" (click)="signUp(email.value, password.value)">Create account</button>
     </form>
   }
@@ -26,4 +31,5 @@
     <p role="alert">{{ message }}</p>
   }
 </header>
+
 <router-outlet />

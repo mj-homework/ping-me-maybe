@@ -10,7 +10,21 @@ rules_version='2'
 //   publishedAt, ingestedAt (timestamp); attributes (map<string, string>).
 // Written only by Cloud Functions (Admin SDK, bypasses rules). Clients never write.
 //
-// sources, rules, deliveries: not opened yet – denied by the catch-all below.
+// Collection: rules
+// Document ID: Firestore auto-ID
+// Fields (all required, no others):
+//   - userId: string (immutable) - owner, must be the writer's uid
+//   - name: string (1–80 chars)
+//   - sourceIds: list (1–3 items, each one of the three SourceIds)
+//   - keywords: list (1–20 items) - lower-cased, trimmed, deduplicated by the client
+//   - channels: list (1–2 items, each 'email' or 'slack')
+//   - active: bool
+//   - createdAt: timestamp (immutable, server time on create)
+//   - updatedAt: timestamp (server time on every write)
+// Rules cannot loop over a list, so they do not check that each keyword is a non-empty
+// string of bounded length; the client normalizes, and the matcher must not trust it.
+//
+// sources, deliveries: not opened yet – denied by the catch-all below.
 //
 // ===============================================================
 
@@ -25,14 +39,51 @@ service cloud.firestore {
       return isAuthenticated() && request.auth.token.admin == true;
     }
 
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    // Shape of a rules document after the write; used by both create and update.
+    function isValidRule(data) {
+      let fields = ['userId', 'name', 'sourceIds', 'keywords', 'channels', 'active',
+        'createdAt', 'updatedAt'];
+      return data.keys().hasOnly(fields) && data.keys().hasAll(fields)
+        && data.userId is string
+        && data.name is string && data.name.size() >= 1 && data.name.size() <= 80
+        && data.sourceIds is list && data.sourceIds.size() >= 1 && data.sourceIds.size() <= 3
+        && data.sourceIds.hasOnly(['bbc-world', 'bbc-business', 'reddit-nottheonion'])
+        && data.keywords is list && data.keywords.size() >= 1 && data.keywords.size() <= 20
+        && data.channels is list && data.channels.size() >= 1 && data.channels.size() <= 2
+        && data.channels.hasOnly(['email', 'slack'])
+        && data.active is bool
+        && data.createdAt is timestamp
+        && data.updatedAt == request.time;
+    }
+
     // Admin event list (/admin/events). No client writes.
     match /events/{eventId} {
       allow read: if isAdmin();
     }
 
+    // Alert rules (/alerts). Users manage their own; admins read all (C4 admin writes later).
+    match /rules/{ruleId} {
+      allow read: if isOwner(resource.data.userId) || isAdmin();
+
+      allow create: if isOwner(request.resource.data.userId)
+        && request.resource.data.createdAt == request.time
+        && isValidRule(request.resource.data);
+
+      allow update: if isOwner(resource.data.userId)
+        && request.resource.data.userId == resource.data.userId
+        && request.resource.data.createdAt == resource.data.createdAt
+        && isValidRule(request.resource.data);
+
+      allow delete: if isOwner(resource.data.userId);
+    }
+
     match /{document=**} {
       // Deny-all for every other path. Client access is opened per collection
-      // (events: admin read only); the other collections follow (CLAUDE.md, ADR-001).
+      // (events: admin read; rules: owner + admin read); the rest follow (CLAUDE.md, ADR-001).
       allow read, write: if false;
     }
   }
