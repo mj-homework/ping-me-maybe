@@ -7,7 +7,7 @@ Chronological log of every AI prompt used on this project, with its outcome and 
 ```markdown
 ### #N
 
-- **Timestamp:** YYYY-MM-DD HH:MM (+TZ)
+- **Timestamp:** YYYY-MM-DD HH:mm
 - **Tool:**
 - **Prompt:**
 
@@ -64,6 +64,33 @@ Task: create ONLY scaffolding and documentation. No business logic, no new npm d
 
 Use the Angular version and conventions already in this repo (check package.json; do not assume a version).
 When done: list every file created or modified, report the result of step 1, and run `ng build` to confirm it compiles. Do not commit.
+````
+
+- **Outcome:** _(to be filled after review)_
+- **Verdict:** _(accepted | changed | rejected)_
+
+### #2
+
+- **Timestamp:** 2026-10-19 14:31
+- **Tool:** Claude Code (WebStorm)
+- **Prompt:**
+
+````text
+Update process/decisions.md:
+
+1. Add a "Date:" line to every ADR in the format YYYY-MM-DD HH:mm (Europe/Budapest time, add a note at the top of the file stating the timezone). Use exactly these values – do not invent or adjust them:
+   - ADR-001: 2026-10-19 13:27
+   - ADR-002: 2026-10-19 13:30
+   - ADR-003: 2026-10-19 13:39
+   - ADR-004: 2026-10-19 13:41
+   - ADR-005: 2026-10-19 13:57
+   - ADR-006: 2026-10-19 14:02
+2. Update the ADR template at the top so future entries include the "Date: YYYY-MM-DD HH:mm" line.
+3. Apply the same timestamp format (YYYY-MM-DD HH:mm) to the templates in process/prompts.md and process/ai-review-log.md.
+4. Add to CLAUDE.md conventions: "All process log entries use timestamps in YYYY-MM-DD HH:mm, Europe/Budapest time. Never guess a timestamp – ask me if you don't know it."
+5. Log this prompt in process/prompts.md as the next entry.
+
+Change nothing else. Show me the diff when done.
 ````
 
 - **Outcome:** _(to be filled after review)_

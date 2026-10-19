@@ -42,6 +42,7 @@ process/              process documentation (prompts, decisions, assumptions, AI
 - Use the installed Firebase agent skills for Firebase APIs. Firestore security rules go through the `firestore-rules-author` subagent.
 - Authorization lives in security rules and Functions. Route guards are UX only.
 - Triggers are at-least-once, so notification delivery must be idempotent (deterministic delivery IDs).
+- All process log entries use timestamps in YYYY-MM-DD HH:mm, Europe/Budapest time. Never guess a timestamp – ask me if you don't know it.
 
 ## Process rules
 

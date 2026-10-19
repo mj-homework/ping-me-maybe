@@ -2,13 +2,15 @@
 
 ADR-style log of significant technical decisions, the alternatives considered and their consequences.
 
+> All timestamps are in Europe/Budapest time (format: `YYYY-MM-DD HH:mm`).
+
 ## Template
 
 ```markdown
 ## ADR-NNN: Title
 
 - **Status:** proposed | accepted | superseded by ADR-XXX
-- **Date:** YYYY-MM-DD
+- **Date:** YYYY-MM-DD HH:mm
 
 ### Context
 
@@ -24,7 +26,7 @@ ADR-style log of significant technical decisions, the alternatives considered an
 ## ADR-001: Single Angular app with a lazy-loaded admin route
 
 - **Status:** accepted
-- **Date:** 2026-10-19
+- **Date:** 2026-10-19 13:27
 
 ### Context
 
@@ -47,7 +49,7 @@ One Angular application. The admin area is a lazy-loaded route (`/admin`), later
 ## ADR-002: Firebase (Auth, Firestore, Functions), emulator-first
 
 - **Status:** accepted
-- **Date:** 2026-10-19
+- **Date:** 2026-10-19 13:30
 
 ### Context
 
@@ -70,7 +72,7 @@ _(to be documented)_
 ## ADR-003: Angular stays at the repository root
 
 - **Status:** accepted
-- **Date:** 2026-10-19
+- **Date:** 2026-10-19 13:39
 
 ### Context
 
@@ -91,7 +93,7 @@ Keep the Angular app at the root, with Cloud Functions in `/functions`.
 ## ADR-004: Project ID `demo-ping-me-maybe` (emulator-only)
 
 - **Status:** accepted
-- **Date:** 2026-10-19
+- **Date:** 2026-10-19 13:41
 
 ### Context
 
@@ -113,7 +115,7 @@ Use the project ID `demo-ping-me-maybe`. The `demo-` prefix makes the Firebase C
 ## ADR-005: Manual `pollSourcesNow` HTTP function alongside the scheduled poller
 
 - **Status:** accepted
-- **Date:** 2026-10-19
+- **Date:** 2026-10-19 13:57
 
 ### Context
 
@@ -136,7 +138,7 @@ _(to be documented)_
 ## ADR-006: Official Firebase agent skills for Claude Code
 
 - **Status:** accepted
-- **Date:** 2026-10-19
+- **Date:** 2026-10-19 14:02
 
 ### Context
 

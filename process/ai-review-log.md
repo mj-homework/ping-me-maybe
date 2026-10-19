@@ -5,7 +5,7 @@ Record of how AI-generated output was reviewed: what was checked, and what was c
 ## Template
 
 ```markdown
-### YYYY-MM-DD – Short title (prompt #N)
+### YYYY-MM-DD HH:mm – Short title (prompt #N)
 
 - **What the AI produced:**
 - **What I checked:**
