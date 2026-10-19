@@ -61,7 +61,9 @@ Use Firebase Auth, Cloud Firestore and Cloud Functions (TypeScript), developed a
 
 ### Alternatives rejected
 
-_(to be documented)_
+- **NestJS / Express + PostgreSQL** – full control and portable, but auth, scheduling, migrations and hosting would all have to be built and wired by hand; too much boilerplate for a 24h timebox.
+- **Supabase** – comparable speed, but weaker native Angular integration than AngularFire and a less mature local emulator story for scheduled/background jobs.
+- **Serverless without a BaaS (e.g. plain cloud functions + separate DB)** – more moving parts and credentials for reviewers.
 
 ### Consequences
 
@@ -127,7 +129,8 @@ Besides the scheduled poller, add an HTTP function `pollSourcesNow`, triggered b
 
 ### Alternatives rejected
 
-_(to be documented)_
+- **Triggering the scheduled function manually via the Functions shell / Pub/Sub emulator** – works for developers, but not for a reviewer clicking through the UI.
+- **Polling from the Angular client** – exposes source access to the browser, bypasses the server-side pipeline and cannot run without a user online.
 
 ### Consequences
 
@@ -150,9 +153,141 @@ Install the official Firebase agent skills for Claude Code so generated code fol
 
 ### Alternatives rejected
 
-_(to be documented)_
+- **No skills, rely on the model's training data** – known risk of outdated APIs (v1 Functions, namespaced SDK).
+- **Pasting Firebase docs into prompts manually** – slower and easy to forget; skills apply consistently.
+
+Note: the skills were not installed during `firebase init` (a typo answered "no" to the prompt) and were installed afterwards via `claude plugin install firebase@firebase`.
 
 ### Consequences
 
 - Fewer outdated/hallucinated Firebase API usages.
 - Generated code is still reviewed by me, especially security rules and trigger idempotency (see `ai-review-log.md`).
+
+## ADR-007: Drop USGS earthquake feed; use BBC RSS + Reddit as real sources
+
+- **Status:** accepted
+- **Date:** [FILL IN: YYYY-MM-DD HH:mm when I dropped earthquakes in Phase 1]
+
+### Context
+
+The pre-roadmap proposed the USGS earthquake GeoJSON feed as the one real source (free, no key, has a numeric severity). In Phase 1 I dropped it.
+
+**Reason for dropping USGS:** [FILL IN: my reason]
+
+### Decision
+
+Real sources are BBC (RSS feeds: World/Top stories, Business) and Reddit (e.g. r/worldnews, r/news, r/stocks). The brief's categories map to feeds:
+
+- breaking news → BBC World / r/worldnews
+- market movements → BBC Business / r/stocks
+- natural disasters → keyword matching on news feeds
+
+### Alternatives rejected
+
+- **USGS earthquakes** – see reason above.
+- **Paid news/market APIs** – keys, rate limits, cost.
+
+### Consequences
+
+- No numeric severity for disasters – detection is keyword-based.
+- Two formats (RSS XML, Reddit JSON) → need a normalizing `SourceAdapter`.
+- Reddit API access rules must be verified manually (rate limits, User-Agent, possible OAuth) before building on it.
+- BBC RSS used for non-commercial demo purposes only (note in README).
+
+## ADR-008: Definition of "important" = user rules + optional source signal
+
+- **Status:** accepted
+- **Date:** 2026-10-19 15:17
+
+### Context
+
+The brief does not define "something important". This is the core ambiguity of the task.
+
+### Decision
+
+An event is important for a user if it matches one of their alert rules: chosen feeds/subreddits + keywords/phrases in title or summary + optional Reddit minimum score (upvotes) as a crowd-sourced severity signal. BBC rules match on feed + keywords only (no score available).
+
+### Alternatives rejected
+
+- **ML/LLM importance scoring** – not verifiable within 24h, opaque to users, high risk of plausible-but-wrong results.
+- **A fixed curated "importance" list defined by us** – not flexible per user.
+
+### Consequences
+
+- Transparent, explainable and testable matching.
+- Keyword matching can produce false positives/negatives – accepted for MVP and documented.
+
+## ADR-009: Event identity, deduplication and Reddit score threshold crossing
+
+- **Status:** accepted
+- **Date:** 2026-10-19 15:17
+
+### Context
+
+Feeds are polled repeatedly, so the same item appears many times. Reddit scores change over time (a post may cross a threshold hours after it was first seen).
+
+### Decision
+
+- Event ID = `{source}_{nativeId}` (RSS guid / Reddit post id), written with create-if-absent so re-polling never creates duplicates.
+- Reddit posts from the last X hours are re-checked on each poll; a rule fires once, at the first poll where the score threshold is met.
+- Delivery ID = `{eventId}_{ruleId}_{channel}` guarantees at-most-once notification per rule and channel.
+
+### Alternatives rejected
+
+- **Evaluating Reddit posts only when first seen** – would miss posts that become important later.
+- **Time-based dedup windows** – fragile.
+
+### Consequences
+
+- Slightly more Firestore reads per poll (re-checking recent Reddit posts), bounded by the X-hour window.
+
+## ADR-010: Fixture/replay source adapter for tests and demos
+
+- **Status:** accepted
+- **Date:** 2026-10-19 15:17
+
+### Context
+
+Live BBC/Reddit content changes by the minute; tests and demos built on them are not reproducible, and the Reddit API may rate-limit or block.
+
+### Decision
+
+Add a `ReplaySourceAdapter` implementing the same `SourceAdapter` interface. It serves saved real BBC and Reddit responses from fixture files. Used in all automated tests and as a demo fallback; switchable per source by config.
+
+### Alternatives rejected
+
+- **Testing against live feeds** – flaky.
+- **Hand-written fake data only** – would not reflect real feed shapes.
+
+### Consequences
+
+- Deterministic tests and demos.
+- Fixtures must be captured once from the real feeds and committed (check they contain nothing sensitive).
+
+## ADR-011: Channel build order – email first, Slack second
+
+- **Status:** accepted
+- **Date:** 2026-10-19 15:21
+
+### Context
+
+The brief requires both email and Slack, and asks for the design to be "flexible enough that we can add more channels later". Building both channels in parallel would make it hard to tell whether the pipeline or a channel is at fault when something breaks, and would not prove the extensibility claim.
+
+### Decision
+
+- Email is built first and must pass its acceptance criteria end-to-end (rule match → exactly one email in Mailpit → `deliveries` doc with status `sent` → no duplicate on re-poll).
+- Slack is started only after that, and is added as a pure `NotificationChannel` adapter plus registration.
+- **Success criterion:** the Slack commit changes no matcher or dispatcher code. The diff of that commit is the evidence for the "add more channels later" requirement.
+- The third channel (generic webhook / in-app inbox) is moved from Should to Could.
+
+### Alternatives rejected
+
+- **Build email and Slack in parallel** – no clean proof of the channel abstraction; harder debugging.
+- **Slack first** – needs a real Slack workspace/webhook earlier; email via a local SMTP catcher is faster to validate.
+- **Third channel as a Must to prove extensibility** – Slack already serves as that proof when added as an isolated adapter.
+
+### Consequences
+
+- The pipeline is validated with one channel before the abstraction is tested.
+- If the Slack commit has to touch the pipeline, that is logged as a design flaw in `ai-review-log.md` and fixed before continuing.
+- Frees roughly 1–2 hours by downgrading the third channel.
