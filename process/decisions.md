@@ -166,7 +166,7 @@ Note: the skills were not installed during `firebase init` (a typo answered "no"
 ## ADR-007: Drop USGS earthquake feed; use BBC RSS + Reddit as real sources
 
 - **Status:** accepted – partially superseded by ADR-012 (Reddit feed choice and Reddit JSON format)
-- **Date:** [FILL IN: YYYY-MM-DD HH:mm when I dropped earthquakes in Phase 1]
+- **Date:** 2026-10-19 15:06 (at the latest – assumptions.md A2 already rejects USGS in commit 0c4cba2)
 
 ### Context
 

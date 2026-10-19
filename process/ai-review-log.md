@@ -36,12 +36,12 @@ Record of how AI-generated output was reviewed: what was checked, and what was c
 - **What I changed / rejected:** Supplied exact `YYYY-MM-DD HH:mm` values myself instead of letting the AI generate them; added the rule "Never guess a timestamp – ask me" to `CLAUDE.md`.
 - **Why:** An AI will happily invent plausible timestamps; a fabricated timeline would undermine the whole process log.
 
-### 2026-10-19 15:12 – Earthquake source dropped (Phase 1)
+### 2026-10-19 15:06 – Earthquake source dropped (Phase 1)
 
 - **What the AI produced:** A pre-roadmap with the USGS earthquake feed as the one real source.
-- **What I checked:** [FILL IN: what I looked at when deciding]
+- **What I checked:** No separate check – a judgement call on how often a relevant earthquake happens.
 - **What I changed / rejected:** Dropped USGS; chose BBC RSS + Reddit as real sources (ADR-007).
-- **Why:** [FILL IN: my reason – same as ADR-007]
+- **Why:** Earthquakes are too rare (fortunately) – unlikely to produce a relevant event during a demo (same as ADR-007).
 
 ### 2026-10-19 15:17 – Preventing invented reasons in ADRs (prompt: BBC/Reddit ADRs)
 
@@ -88,7 +88,7 @@ Record of how AI-generated output was reviewed: what was checked, and what was c
 
 - **What the AI produced:** The outcome of prompt #5 in prompts.md says the button changes the title to `Admin dashboard`.
 - **What I checked:** The actual code in `admin-page.ts`: `this.title.update((t) => t += '!')`, which appends "!" on every click.
-- **What I changed / rejected:** Logged the mismatch; the outcome text of #5 will be corrected. [FILL IN: was the code changed by hand afterwards, or did the AI describe it wrongly?]
+- **What I changed / rejected:** Logged the mismatch; the outcome text of #5 will be corrected. Not known any more. Git cannot tell either: the code (appends "!") and the "Admin dashboard" outcome were first committed together in 6ec2664 (16:01).
 - **Why:** A plausible-sounding outcome summary is not evidence. The log must describe what the code does, not what it was supposed to do.
 
 ### 2026-10-19 16:16 – Verified that `firestore-rules-author` exists (CLAUDE.md)
@@ -121,7 +121,7 @@ Record of how AI-generated output was reviewed: what was checked, and what was c
 ### 2026-10-19 17:53 – BBC guid `#N` suffix is not a stable ID (prompt #7)
 
 - **What the AI produced:** While reading the fixtures for `design.md`, the finding that `fixtures/bbc-business.xml` contains the same article twice: `…/articles/c60rl1xvjv89o#0` and `…#3`, same title and `pubDate`.
-- **What I checked:** [FILL IN]
+- **What I checked:** Check (planning chat, 2026-10-19 18:50): in functions/fixtures/bbc-business.xml both items have the same title, description, link, pubDate and thumbnail – only the guid suffix differs (#0 vs #3).
 - **What I changed / rejected:** ADR-013 point 2: BBC `externalId` = guid with the trailing `#N` suffix stripped.
 - **Why:** Using the raw guid as the dedup key would create two events for one story and send two notifications – it would break S4.
 
@@ -130,7 +130,7 @@ Record of how AI-generated output was reviewed: what was checked, and what was c
 - **What the AI produced:** `design.md` (prompt #7) with the matcher filter "every keyword in title+summary", i.e. AND over keywords, following A7.
 - **What I checked:** The demo script in `scope.md`: the rule "BBC World, keywords `earthquake, flood`".
 - **What I changed / rejected:** Keywords are OR-ed (ADR-014); A7, `design.md` and `scope.md` (M4) updated.
-- **Why:** [FILL IN]
+- **Why:** Suggested by the AI in the planning chat; I agreed because the demo rule "earthquake, flood" would almost never fire with AND, and the M4 single-keyword test would not have caught it.
 
 ### 2026-10-19 18:35 – IDE Claude overstepped on commit 03d207f (prompt #11)
 

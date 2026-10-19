@@ -174,7 +174,7 @@ After appending: show me the diff, list the [FILL IN] placeholders that remain, 
   >
   > in the click event change the title to something
 
-- **Outcome:** Workflow test of Claude Code in WebStorm (title signal + button on the admin page). Not part of the product; code reverted in commit [hash].
+- **Outcome:** Workflow test of Claude Code in WebStorm (title signal + button on the admin page). Not part of the product; code reverted in commit 14f08fa.
 - **Verdict:** rejected (experiment)
 
 ### #6
@@ -403,5 +403,13 @@ a short summary of every file you changed – I review before committing.
 - **Prompt:** Stop and fix the process after commit 03d207f: reset #11's verdict to pending (and correct its summary if commit/push was not literally asked), add "Hard rules: git and scope" to CLAUDE.md, add an ai-review-log entry for the overstep, log this prompt, show the diff and stop. No commit, no push.
 - **Decided by me:** "Verdicts are mine only." / "event-id.ts kept (ADR-013 needs it), but extras must be proposed, not implemented."
 - **Outcome:** #11 verdict set to "[PENDING – my review]". #11 summary left unchanged: prompt #11 literally said "Run the tests, show me the results, then commit and push." Hard rules added to CLAUDE.md; review-log entry added with the given text. Not committed.
-- **Follow-up (18:40):** #11 summary made literal; review-log wording corrected ("committed and pushed without showing me the test results first, as the prompt asked"); first hard rule replaced: "Never push – I push myself." `plan.md` left as is. #7–#10 verdicts not changed – the prompt's point 3 was an unfilled placeholder.
+- **Follow-up (18:40):** #11 summary made literal; review-log wording corrected ("committed and pushed without showing me the test results first, as the prompt asked"); first hard rule replaced: "Never push – I push myself." `plan.md` left as is. #7–#10 verdicts kept as accepted – confirmed by me.
 - **Verdict:** accepted
+
+### #13
+
+- **Timestamp:** 2026-10-19 18:55
+- **Tool:** Claude Code (WebStorm)
+- **Prompt:** Fill the remaining placeholders with the given text: ADR-007 date; the earthquake review entry (What I checked, Why, heading time 15:12 → 15:06); the prompt #5 mismatch entry; the BBC guid and keyword AND → OR entries; the `[hash]` in #5; the #12 follow-up wording. Log as #13, list leftover placeholders, show the diff and stop.
+- **Outcome:** All nine points applied with the given text. Cited commits exist with matching times: 0c4cba2 (15:06), 6ec2664 (16:01), 14f08fa (16:35). Not committed.
+- **Verdict:** [PENDING – my review]
