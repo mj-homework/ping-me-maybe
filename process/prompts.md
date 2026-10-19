@@ -2,6 +2,8 @@
 
 Chronological log of every AI prompt used on this project, with its outcome and whether the result was accepted, changed or rejected.
 
+Process-only fixes (log corrections, hashes, verdicts) are not logged as separate prompts; their changes are folded into the next entry.
+
 ## Template
 
 ```markdown

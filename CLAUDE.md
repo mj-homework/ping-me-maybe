@@ -49,6 +49,7 @@ process/              process documentation (prompts, decisions, assumptions, AI
 ## Process rules
 
 - **Log every prompt in `process/prompts.md`**, in order, with the outcome and verdict (accepted / changed / rejected).
+- Process-only fixes (log corrections, hashes, verdicts) are not logged as separate prompts; their changes are folded into the next entry (which mentions their commit). Numbering continues without gaps.
 - Record significant decisions as ADRs in `process/decisions.md`.
 - Record assumptions about the brief in `process/assumptions.md`.
 - Record reviews of AI output in `process/ai-review-log.md`.
