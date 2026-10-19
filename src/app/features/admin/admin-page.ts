@@ -1,16 +1,7 @@
-import { Component, signal } from '@angular/core';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-admin-page',
-  template: `
-    <h1>{{ title() }}</h1>
-    <button type="button" (click)="changeTitle()">Change title</button>
-  `,
+  template: `<h1>Admin</h1>`,
 })
-export class AdminPageComponent {
-  readonly title = signal('Admin');
-
-  changeTitle(): void {
-    this.title.update((t) => t += '!');
-  }
-}
+export class AdminPageComponent {}

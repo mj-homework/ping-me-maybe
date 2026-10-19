@@ -172,7 +172,7 @@ Note: the skills were not installed during `firebase init` (a typo answered "no"
 
 The pre-roadmap proposed the USGS earthquake GeoJSON feed as the one real source (free, no key, has a numeric severity). In Phase 1 I dropped it.
 
-**Reason for dropping USGS:** [FILL IN: my reason]
+**Reason for dropping USGS:** Unlikely to produce a relevant event during a demo.
 
 ### Decision
 
