@@ -11,7 +11,7 @@
 - [x] Restructure: Angular app moved to `app/`, next to `functions/` (ADR-015, prompt #14)
 - [ ] **M3 – Ingestion**
   - [x] Part 1: `parseFeed` (RSS + Atom), `ReplaySourceAdapter`, source config, `eventId`; 13 Vitest tests on all four fixtures (prompt #11)
-  - [ ] Part 2a: `pollAllSources` with `create()` dedup + `sources` status, `onCall pollSourcesNow` (replay only), `npm run poll:replay` dev script – code done, lint/build/tests pass; not yet tried against the emulator (prompt #17)
+  - [x] Part 2a: `pollAllSources` with `create()` dedup + `sources` status, `onCall pollSourcesNow` (replay only), `npm run poll:replay` dev script (prompt #17); tried against the emulator by me; unit tests with a fake Firestore (prompt #18)
   - [ ] Part 2b: live `FeedSourceAdapter` (User-Agent, timeout), `onSchedule`
 - [ ] M1 + M2 – auth, rule CRUD, security rules + rules tests
 - [ ] M4 – matcher, email (Mailpit), idempotency (S4)
