@@ -25,6 +25,7 @@ src/app/
   features/alerts/    user-facing alerts feature (/alerts)
   features/admin/     admin view (/admin, lazy-loaded)
 functions/            Cloud Functions (TypeScript), source in functions/src
+functions/fixtures/   recorded feed snapshots for parser tests and the replay adapter
 firestore.rules       Firestore security rules
 firestore.indexes.json
 process/              process documentation (prompts, decisions, assumptions, AI review, plan)
@@ -50,3 +51,14 @@ process/              process documentation (prompts, decisions, assumptions, AI
 - Record significant decisions as ADRs in `process/decisions.md`.
 - Record assumptions about the brief in `process/assumptions.md`.
 - Record reviews of AI output in `process/ai-review-log.md`.
+
+### Standing rule: Claude keeps the process logs
+
+Follow this for every prompt without being asked:
+
+- **Claude keeps the process logs, not the user.** After each prompt: log it in `prompts.md`; add `ai-review-log.md` entries when the user rejects or changes Claude's output or when a check finds a problem; record decisions as ADRs when they change scope or design; tick off / add points in `plan.md`.
+- **The user's decisions come from their chat messages.** Quote them verbatim as "Decided by me: …". Never invent the user's reasons – if none was given, write "Reason not stated."
+- **Timestamps:** use the time the user puts at the start of a prompt. If a prompt has none, write "time not given" and carry on – never block on it.
+- **Review log voice:** attribute every check to whoever did it: "Check (planning chat): …", "Check (IDE Claude, script): …", "Check (me): …". Use `[FILL IN]` only where the check really has to be the user's.
+- **Approvals:** when the user says "approved", record it next to the item (e.g. `design.md` §4) with the time.
+- **Keep log entries short.** Process docs are updated in the same commit as the code they describe.

@@ -147,6 +147,8 @@ A crash between `send()` and the status write leaves the delivery in `sending` a
 
 ## 4. Dependencies (to be approved before installing)
 
+**Approved:** `fast-xml-parser` and `vitest` (dev) in `functions/` – installed by me, 2026-10-19 18:14 (prompt #11). The others are still pending.
+
 | Package | Where | Why |
 |---|---|---|
 | `fast-xml-parser` | functions | Zero-dep parser for RSS 2.0 + Atom incl. CDATA; a hand-written XML parser is not worth the risk |
@@ -162,4 +164,4 @@ Not npm: Slack uses Node 24's built-in `fetch`; Mailpit is a binary / Docker ima
 - **Demo step 6 (`scope.md`)** does not work as written: re-fetching replay data is deduplicated, so nothing new is sent. Needs a second replay fixture or a replay reset. Not solved yet.
 - **First poll on a fresh emulator** ingests every item currently in the feeds (~25–45 per feed). Correct under A5 and what the demo relies on, but broad keywords will fire many alerts.
 - **To verify with the Firebase skills before coding:** `firebase-functions` v7 import paths (scaffold uses `firebase-functions/https`); that the Functions emulator populates `request.auth` for `onCall` from Auth emulator tokens; the error code of `create()` on an existing doc (expected gRPC 6 `ALREADY_EXISTS`); whether `fast-xml-parser` decodes HTML entities (`&#32;`, `&quot;`) in Reddit's escaped HTML.
-- **`#N` suffix on BBC guids:** the fixture only proves it is not unique per story (`c60rl1xvjv89o#0` and `#3` in `bbc-business.xml`); its meaning at BBC is unknown.
+- **`#N` suffix on BBC guids:** the fixture only proves it is not unique per story (`c60rl1xvjv89o#0` and `#3` in `functions/fixtures/bbc-business.xml`); its meaning at BBC is unknown.

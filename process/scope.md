@@ -28,8 +28,8 @@ A logged-in user defines **alert rules** over news feeds. When a new item from *
 - **Every request sends a custom User-Agent** – Reddit returns 403 without one.
 - All sources implement one `SourceAdapter` and normalize into the A3 `Event` shape: `{ sourceId, externalId, category, title, summary, url, publishedAt, attributes{} }`. `externalId` = RSS `guid` / Atom `<id>`.
 - A `ReplaySourceAdapter` serves saved responses for tests and demo fallback (ADR-010). Fixtures:
-  - `fixtures/bbc-world.xml`, `fixtures/bbc-business.xml`, `fixtures/reddit-nottheonion.xml` – live snapshots, the shape reference for parser tests.
-  - `fixtures/reddit-nottheonion.demo.xml` – curated, deterministic match / no-match cases for matcher tests and the demo (`florida` rule).
+  - `functions/fixtures/bbc-world.xml`, `bbc-business.xml`, `reddit-nottheonion.xml` – live snapshots, the shape reference for parser tests.
+  - `functions/fixtures/reddit-nottheonion.demo.xml` – curated, deterministic match / no-match cases for matcher tests and the demo (`florida` rule).
 
 ## 3. User stories (MoSCoW)
 

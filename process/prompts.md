@@ -378,3 +378,20 @@ a short summary of every file you changed – I review before committing.
 
 - **Outcome:** Both `[FILL IN]` parts of the 17:07 review entry replaced with the given text; the existing "Kept it in addition to…" sentence kept. The fixture was read but not edited, and the check confirmed it: `t3_pmm0001` and `t3_pmm0003` have a `<table>` and no md div, while `t3_pmm0002` and `t3_pmm0004` have the md div. All four have `<content type="html">`, `t3_…` IDs and the live date format. No mismatch. Minor note, left as is: `t3_pmm0004` lacks the "submitted by" text that the live self post `t3_1x8qstr` has after its md div; it does not affect the summary (md div text only). The AI did not take a timestamp from the system clock because it showed 16:02, inconsistent with the 17:53 entries, and asked instead.
 - **Verdict:** accepted
+
+### #10
+
+- **Timestamp:** 2026-10-19 18:15
+- **Tool:** Claude Code (WebStorm)
+- **Prompt:** Standing rule for process logs (Claude keeps them, verbatim decisions, timestamps, approvals, short entries) – add to CLAUDE.md. Follow-up: timestamp handling, fill `plan.md`, review-log voice, then continue with M3.
+- **Decided by me:** "You keep the process logs, not me." / "If a prompt has none, write "time not given" and carry on – never block on it." / "Attribute checks to whoever did them: "Check (planning chat): …", "Check (IDE Claude, script): …", "Check (me): …". Use [FILL IN] only where the check really has to be mine." Reason not stated.
+- **Outcome:** Standing rule added to `CLAUDE.md` (Process rules), with the timestamp and review-voice refinements. `plan.md` filled from `scope.md` and the work schedule: status, time blocks, cut lines, risks, break rule; notes ~1 h schedule slip.
+- **Verdict:** accepted
+
+### #11
+
+- **Timestamp:** time not given
+- **Tool:** Claude Code (WebStorm)
+- **Prompt:** M3 – Ingestion, part 1: record the dependency approval (installed by hand 18:14), move `fixtures/` to `functions/fixtures/`, implement `parseFeed` (RSS + Atom, entities, BBC `#N` stripped, Reddit md-div summary), `ReplaySourceAdapter` and the source config in `functions/src/sources/`, Vitest tests on all four fixtures; no live adapter, poll or Firestore writes. Run tests, commit, push, update `plan.md`.
+- **Outcome:** `git mv fixtures functions/fixtures`; references updated in `scope.md`, `design.md` and `CLAUDE.md` (folder tree), but not in historical entries (`decisions.md`, `ai-review-log.md`, `prompts.md`). Approval recorded in `design.md` §4. Added `types.ts`, `sources.ts`, `parse-feed.ts`, `html-text.ts`, `event-id.ts` (not requested, but the design's ID function, pure and testable), `replay-source-adapter.ts`, `parse-feed.test.ts`, and the `test` script (`vitest run --dir src`). 13 tests pass; tsc, lint and build are clean. Check (IDE Claude, mutation): removing the `#N` stripping fails 2 tests, and using the whole Reddit content as the summary fails 3. `parseFeed` also drops duplicate IDs within one feed: `bbc-business.xml` has 45 items and 43 events.
+- **Verdict:** accepted
