@@ -18,7 +18,7 @@
   - [x] Rule form on `/alerts` (create, list, pause/resume, delete) + `rules` security rules + index – code in prompt #21, hardened in #22; tried in the browser by me, works (~00:50)
   - [ ] Rules tests for `rules` and `events` (morning)
 - [x] M5 part: `/admin/events` list, `admin` guard, `events` admin-read rule – code in prompts #19/#20; tried in the browser by me, works (~23:30)
-- [ ] M4 – matcher, email (Mailpit), idempotency (S4)
+- [ ] M4 – matcher, email (Mailpit), idempotency (S4) – code in #23 (matcher + `matchEvent` + `sendDelivery` + email channel, matcher tests), not yet tried
 - [ ] M5 + M6 – admin view, Fetch now, guard
 - [ ] S1 – Slack (only if M4 passes)
 - [ ] README, demo rehearsal, close logs, final push

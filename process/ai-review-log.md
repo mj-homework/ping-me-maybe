@@ -162,7 +162,14 @@ Record of how AI-generated output was reviewed: what was checked, and what was c
 
 ### 2026-10-20 00:56 – Gaps in the #21 rule form and rules (prompt #22)
 
-- **What the AI produced:** `isValidRule()` in `firestore.rules`, `alerts-page.ts` and `normalizeKeywords` (prompt #21).
+- **What the AI produced:** `isValidRule()` in `firestore.rules`, `alerts-page.ts` and `normalizeKeywords` (prompt #21); the empty `<p>` spacers were my own edit, not AI output.
 - **What I checked:** Check (planning chat): blank name and duplicate sourceIds/channels passed the rules; empty `<p>` used as spacers; `normalizeKeywords` untested.
 - **What I changed / rejected:** `trim()` and `toSet()` checks in the rules (emulator script: blank name and duplicate sourceId denied); spacers replaced with component `styles`; Vitest for `normalizeKeywords` (prompt #22).
+- **Why:** The rules are the only real guard: a blank-named or duplicate-source rule would reach the matcher and the admin view. Spacing belongs in CSS, not empty elements. `normalizeKeywords` decides what the matcher compares, so it needs a test.
+
+### 2026-10-20 01:09 – nodemailer version and the `florida` count (prompt #23)
+
+- **What the AI produced:** nothing yet – two checks during #23 found gaps in the prompt's expectations.
+- **What I checked:** Check (IDE Claude, npm registry): `nodemailer@latest` (10.1.7) was 2 days old. Check (IDE Claude, test): the `florida` rule matches two entries of the demo fixture (title + summary-only), not "exactly one".
+- **What I changed / rejected:** IDE Claude pinned `nodemailer` 10.0.15 (2026-10-05); the test asserts both entries (t3_pmm0001, t3_pmm0002). [FILL IN – keep or change]
 - **Why:** Reason not stated.

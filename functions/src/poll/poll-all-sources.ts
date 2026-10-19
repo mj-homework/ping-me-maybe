@@ -1,4 +1,5 @@
-import { FieldValue, Firestore, GrpcStatus } from 'firebase-admin/firestore';
+import { FieldValue, Firestore } from 'firebase-admin/firestore';
+import { errorMessage, isAlreadyExists } from '../shared/errors';
 import { eventId } from '../sources/event-id';
 import { NormalizedEvent, SourceAdapter, SourceId } from '../sources/types';
 
@@ -96,25 +97,4 @@ async function createEvent(db: Firestore, event: NormalizedEvent): Promise<'crea
     if (isAlreadyExists(err)) return 'skipped';
     throw err;
   }
-}
-
-/**
- * @param {unknown} err Error thrown by the Admin SDK.
- * @return {boolean} True for gRPC ALREADY_EXISTS (6).
- */
-function isAlreadyExists(err: unknown): boolean {
-  return (
-    typeof err === 'object' &&
-    err !== null &&
-    'code' in err &&
-    err.code === GrpcStatus.ALREADY_EXISTS
-  );
-}
-
-/**
- * @param {unknown} err Anything thrown.
- * @return {string} A message readable in the admin view.
- */
-function errorMessage(err: unknown): string {
-  return err instanceof Error ? err.message : String(err);
 }
