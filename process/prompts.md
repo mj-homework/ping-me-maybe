@@ -152,3 +152,27 @@ After appending: show me the diff, list the [FILL IN] placeholders that remain, 
 
 - **Outcome:** _(to be filled after review)_
 - **Verdict:** _(accepted | changed | rejected)_
+
+### #4
+
+- **Timestamp:** 2026-10-19 15:38
+- **Tool:** Claude Code (WebStorm)
+- **Prompt:**
+
+  > //add a title signal
+
+- **Outcome:** Added a `title` signal to `AdminPageComponent` and bound the heading to its value.
+- **Verdict:** accepted
+
+### #5
+
+- **Timestamp:** 2026-10-19 15:39
+- **Tool:** Claude Code (WebStorm)
+- **Prompt:**
+
+  > add a button
+  >
+  > in the click event change the title to something
+
+- **Outcome:** Added a button that changes the title signal to `Admin dashboard` when clicked.
+- **Verdict:** accepted

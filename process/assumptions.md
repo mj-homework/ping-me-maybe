@@ -2,6 +2,7 @@
 
 > Phase 1: disambiguating the brief. Each item is a question I would ask the PM, plus the assumption I'm building on until told otherwise.
 > Agreed in planning chat: 2026-10-19 14:46 – 14:57 (Europe/Budapest).
+> **Updated:** 2026-10-19 15:51 – A2 extended with BBC World; A11 clarified (Slack = Should, after email). Aligned with `scope.md`.
 > Status: **Confirmed** = explicitly decided by me · **Default** = proposed, accepted without change.
 
 ## What & where from
@@ -9,7 +10,7 @@
 | # | Question | Assumption | Status |
 |---|---|---|---|
 | A1 | What counts as "something important"? | Importance is **user-defined via rules**, not decided by the system. A rule matches on source/category + keyword conditions on title/summary. No ML / "AI importance" scoring. | Default |
-| A2 | Which sources? | Two **real** RSS feeds, no API keys: **BBC Business** (economic news) and **Reddit r/nottheonion** (the playful one). Earthquakes (USGS) rejected: unlikely to produce a relevant event during a demo. Recorded feed snapshots are used as test fixtures. Exact feed URLs and Reddit's access rules (User-Agent, rate limits) to be verified before implementation. | Confirmed |
+| A2 | Which sources? | Three **real** RSS feeds, no API keys: **BBC World** (breaking news, disasters via keywords), **BBC Business** (economic news) and **Reddit r/nottheonion** (the playful one). Earthquakes (USGS) rejected: unlikely to produce a relevant event during a demo. Recorded feed snapshots are used as test fixtures. Exact feed URLs and Reddit's access rules (User-Agent, rate limits) to be verified before implementation. *(15:51: BBC World added so all three brief categories are covered.)* | Confirmed |
 | A3 | What is a normalized event? | `{ sourceId, externalId, category, title, summary, url, publishedAt, attributes{} }`. Dedup key: `sourceId + externalId` (RSS `guid`/link). | Default |
 | A4 | How fresh must alerts be? | Polling every few minutes + admin "Fetch now". No real-time push/streaming. | Default |
 | A5 | Do new rules match past events? | No — only events ingested after the rule exists. | Default |
@@ -29,7 +30,7 @@
 | # | Question | Assumption | Status |
 |---|---|---|---|
 | A10 | Email to where? | The user's account email. Locally delivered to Mailpit/Ethereal; nothing real is sent. **Email is the primary MVP channel.** | Confirmed |
-| A11 | Slack how? | **Deferred to the end (stretch goal).** If built: user pastes their own incoming webhook URL. Known downsides: the URL is a secret (leak = anyone can post), clunky setup for users, fixed channel, silent failure if revoked. | Confirmed |
+| A11 | Slack how? | **Stretch goal (Should), started only after email passes its acceptance criteria** (ADR-011). If built: user pastes their own incoming webhook URL. Known downsides: the URL is a secret (leak = anyone can post), clunky setup for users, fixed channel, silent failure if revoked. | Confirmed |
 | A12 | What does "add more channels later" mean? | `ChannelAdapter` interface + registry. New channel = one adapter + one registration line; matching code untouched. Slack later is the proof. | Default |
 | A13 | Failed deliveries? | Recorded with status + error; no automatic retry in MVP; visible in admin view. | Default |
 | A14 | Duplicate notifications? | At most one delivery per `event × rule × channel`: deterministic ID `{eventId}_{ruleId}_{channel}` + `create()`. | Default |

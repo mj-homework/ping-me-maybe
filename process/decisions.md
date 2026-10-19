@@ -165,7 +165,7 @@ Note: the skills were not installed during `firebase init` (a typo answered "no"
 
 ## ADR-007: Drop USGS earthquake feed; use BBC RSS + Reddit as real sources
 
-- **Status:** accepted
+- **Status:** accepted – partially superseded by ADR-012 (Reddit feed choice and Reddit JSON format)
 - **Date:** [FILL IN: YYYY-MM-DD HH:mm when I dropped earthquakes in Phase 1]
 
 ### Context
@@ -196,7 +196,7 @@ Real sources are BBC (RSS feeds: World/Top stories, Business) and Reddit (e.g. r
 
 ## ADR-008: Definition of "important" = user rules + optional source signal
 
-- **Status:** accepted
+- **Status:** accepted – partially superseded by ADR-012 (Reddit minimum score moved to Could)
 - **Date:** 2026-10-19 15:17
 
 ### Context
@@ -219,7 +219,7 @@ An event is important for a user if it matches one of their alert rules: chosen 
 
 ## ADR-009: Event identity, deduplication and Reddit score threshold crossing
 
-- **Status:** accepted
+- **Status:** accepted – partially superseded by ADR-012 (score threshold crossing not in MVP; event and delivery IDs still apply)
 - **Date:** 2026-10-19 15:17
 
 ### Context
@@ -266,7 +266,7 @@ Add a `ReplaySourceAdapter` implementing the same `SourceAdapter` interface. It 
 
 ## ADR-011: Channel build order – email first, Slack second
 
-- **Status:** accepted
+- **Status:** accepted – amended by ADR-012 (Slack moved from Must to Should)
 - **Date:** 2026-10-19 15:21
 
 ### Context
@@ -291,3 +291,39 @@ The brief requires both email and Slack, and asks for the design to be "flexible
 - The pipeline is validated with one channel before the abstraction is tested.
 - If the Slack commit has to touch the pipeline, that is logged as a design flaw in `ai-review-log.md` and fixed before continuing.
 - Frees roughly 1–2 hours by downgrading the third channel.
+
+## ADR-012: Narrowed MVP – r/nottheonion via RSS, no Reddit score, Slack as stretch goal
+
+- **Status:** accepted
+- **Date:** 2026-10-19 15:51
+- **Supersedes:** parts of ADR-007, ADR-008, ADR-009; amends ADR-011
+
+### Context
+
+After the AI review of `scope.md` against `assumptions.md` (A1, A2, A3, A11, A15), the MVP was narrowed. ADR-007…009 and ADR-011 were written before that review and no longer match `scope.md`:
+
+- ADR-007 names r/worldnews, r/news, r/stocks and assumes Reddit JSON (two input formats).
+- ADR-008 includes an optional Reddit minimum score in the definition of "important".
+- ADR-009 describes re-checking Reddit posts until they cross a score threshold.
+- ADR-011 treats Slack as a Must.
+
+### Decision
+
+1. **Sources:** BBC World (RSS), BBC Business (RSS) and **Reddit r/nottheonion via its RSS feed**. All sources are plain RSS – one input format, no API keys.
+2. **"Important"** = selected feed(s) + keywords/phrases in title or summary. The Reddit minimum score is **not** part of the MVP (moved to Could, C5).
+3. **No score threshold crossing:** an event is evaluated once, when it is first ingested. Still valid from ADR-009: event ID `{sourceId}_{externalId}` (create-if-absent) and delivery ID `{eventId}_{ruleId}_{channel}`.
+4. **Slack** moves from Must to **Should** (S1, stretch goal). The ADR-011 build order and its success criterion (the Slack commit touches no matcher/dispatcher code) still apply if Slack is built.
+
+### Alternatives rejected
+
+- **Keep the Reddit score in the MVP** – requires the Reddit `.json` endpoint (a second input format) plus re-polling of already-seen posts; too much complexity for the timebox.
+- **Silently edit ADR-007…009 and ADR-011** – would hide how the design evolved; the decision log is meant to show course-corrections.
+- **Drop Reddit entirely** – r/nottheonion adds a playful, recognisable demo feed at almost no cost, since it is RSS like BBC.
+
+### Consequences
+
+- One `SourceAdapter` implementation (RSS) covers all real sources; the normalizer is simpler.
+- r/nottheonion is a playful feed and does not map to "market movements"; that brief category is covered by BBC Business only.
+- The ADR-009 consequence "more Firestore reads per poll for re-checking recent Reddit posts" no longer applies.
+- If Slack is not built, the channel abstraction is argued in the README instead of proven by a commit diff (scope cut line 3).
+- Reddit RSS access rules (User-Agent, rate limits) still have to be verified (see `ai-review-log.md`, OPEN item).

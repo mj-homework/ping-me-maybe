@@ -63,3 +63,16 @@ Record of how AI-generated output was reviewed: what was checked, and what was c
 - **What I checked:** [FILL IN: result of calling the public `.json` / `.rss` endpoints without auth]
 - **What I changed / rejected:** [FILL IN]
 - **Why:** Building on an unverified assumption about a third-party API is a typical AI-induced risk.
+
+### 2026-10-19 15:51 – Cross-check of scope.md against assumptions.md (second AI tool)
+
+- **What the AI produced:** `scope.md` (planning chat, 15:31) that had drifted from the confirmed Phase 1 assumptions: different sources (r/worldnews, r/news, r/stocks instead of r/nottheonion), Slack as a Must despite A11 deferring it, no mention of the disabled admin actions (A15), a Reddit min. score condition that RSS cannot support, ADR-009 cited for two unrelated things, and no acceptance criterion for A5.
+- **What I checked:** Had a second AI tool review `scope.md` against `assumptions.md`, then decided the conflicting points myself.
+- **What I changed / rejected:**
+  - Sources: BBC World + BBC Business + r/nottheonion (A2 extended with BBC World to cover all three brief categories).
+  - Slack moved from Must (M5) to Should (S1), still gated behind email (ADR-011); demo and cut lines adjusted.
+  - Disabled admin write actions added to scope; enabling them tracked as C2–C4.
+  - Reddit min. score moved to Could (C5); rules are keyword-only. ADR-009 now refers only to dedup.
+  - Added acceptance criterion: creating a rule does not alert on already-ingested events (A5).
+  - Event shape in scope aligned with A3.
+- **Why:** The scope is a commitment built on the assumptions; a silent drift between the two documents means the plan no longer reflects my decisions.
