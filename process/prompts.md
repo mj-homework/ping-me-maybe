@@ -420,7 +420,7 @@ a short summary of every file you changed – I review before committing.
 - **Tool:** Claude Code (WebStorm)
 - **Prompt:** Restructure on a new branch `restructure-app`: `git mv` the Angular app (angular.json, package*.json, tsconfig*.json, src/, public/) into `app/`, next to `functions/`; reinstall in `app/`; fix paths in `.vscode/`, `.gitignore`, `firebase.json`, README, CLAUDE.md; verify builds/tests; ADR-015 (supersedes ADR-003); review-log entry on the "standard Firebase layout" claim; log as #14. Do not touch main, do not push, commit only after OK.
 - **Decided by me:** "I prefer app/ and functions/ side by side – two separate programs, not one inside the other."
-- **Outcome:** 22 files moved with `git mv` on `restructure-app`. Root `node_modules`, `dist/`, `.angular/` deleted; `npm install` in `app/`. Paths fixed in `.gitignore` (`/app/…`), `.vscode/tasks.json` (`path: app`, explicit labels so `launch.json` still resolves), README, CLAUDE.md; `firebase.json` has no Angular paths. `ng build` OK; `ng test` 1/2 – `app.spec.ts` "should render title" fails because `app.html` is only `<router-outlet />` since 39b10e4 (not caused by the move). Functions: build OK, 13/13 tests. ADR-015 date 2026-10-19 20:53 (given by me). Committed in cecd4c4 after my OK.
+- **Outcome:** 22 files moved with `git mv` on `restructure-app`. Root `node_modules`, `dist/`, `.angular/` deleted; `npm install` in `app/`. Paths fixed in `.gitignore` (`/app/…`), `.vscode/tasks.json` (`path: app`, explicit labels so `launch.json` still resolves), README, CLAUDE.md; `firebase.json` has no Angular paths. `ng build` OK; `ng test` 1/2 – `app.spec.ts` "should render title" fails because `app.html` is only `<router-outlet />` since 39b10e4 (not caused by the move). Functions: build OK, 13/13 tests. ADR-015 date 2026-10-19 20:53 (given by me). Committed in cecd4c4 after my OK. app.spec.ts fixed in the same commit (router-outlet instead of h1); ng test 2/2.
 - **Verdict:** accepted
 
 ### #15
@@ -431,3 +431,20 @@ a short summary of every file you changed – I review before committing.
 - **Decided by me:** "I prefer the root Prettier style in functions/ too – one style across the repo."
 - **Outcome:** `functions/.prettierrc` removed; three rules changed as given. One more Google rule conflicted: `quote-props` (`consistent-as-needed` vs Prettier `as-needed`) → set to `as-needed`. `linebreak-style` stays inherited from `google` (unix). Besides `functions/src`, `functions/.eslintrc.js` itself was also formatted with the root Prettier, because `npm run lint` checks it (31 errors otherwise). Lint clean, build OK, 13/13 tests. ADR-016 date 2026-10-19 21:43 (given by me). Committed in 88cc92a after my OK.
 - **Verdict:** accepted
+
+### #16
+
+- **Timestamp:** 2026-10-19 22:15
+- **Tool:** Claude Code (WebStorm)
+- **Prompt:** Process fixes for #13–#15 and the CRLF entry time.
+- **Outcome:** Committed in 0400614.
+- **Verdict:** accepted – confirmed by me
+
+### #17
+
+- **Timestamp:** 2026-10-19 22:30
+- **Tool:** Claude Code (WebStorm)
+- **Prompt:** Tonight's step 1 (`todo-for-night.md`): `pollAllSources(db, adapters)` writing `events/{eventId}` with `create()` + `ingestedAt`, ALREADY_EXISTS = skipped (verify the code), `sources/{id}` status, per-source summary; `pollSourcesNow` onCall with the ADR-013 admin check and SOURCE_MODE (replay only), exported from index.ts (verify v7 import paths); `npm run poll:replay` dev script that refuses to run without FIRESTORE_EMULATOR_HOST and uses the `.firebaserc` project ID. Not now: live adapter, onSchedule, admin button, events rules. Run lint, build, tests; explain how to try it; update plan.md; log #16 and #17; add the app.spec.ts note to #14. Commit only after OK, do not push.
+- **Decided by me:** "Tonight a thin, visible slice in 4 steps – see todo-for-night.md."
+- **Outcome:** Added `functions/src/poll/poll-all-sources.ts`, `poll/adapters.ts` (`createAdapters(mode)`), `scripts/poll-replay.ts`; `index.ts` rewritten (scaffold comments removed; `initializeApp`, `pollSourcesNow`); `poll:replay` script in `functions/package.json`. Check (IDE Claude, installed typings): `create()` on an existing doc → `GrpcStatus.ALREADY_EXISTS` = 6 (exported by `firebase-admin/firestore`); firebase-functions 7.4.0 exports `onCall`/`HttpsError` from `firebase-functions/https` and `defineString` from `firebase-functions/params`. The Firebase skills cover neither, and the Firebase MCP server timed out. Lint clean, build OK, 13/13 tests; guard checked without FIRESTORE_EMULATOR_HOST (refuses, exit 1). Not yet run against the emulator. Beyond the prompt, following design.md §1: `sources` also gets `name`, `category`, `lastSuccessAt`, `lastItemCount`, `lastNewCount`. No ADR: tonight's order changes the sequence, not the scope.
+- **Verdict:** [PENDING – my review]

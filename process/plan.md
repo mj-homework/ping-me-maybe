@@ -11,7 +11,8 @@
 - [x] Restructure: Angular app moved to `app/`, next to `functions/` (ADR-015, prompt #14)
 - [ ] **M3 – Ingestion**
   - [x] Part 1: `parseFeed` (RSS + Atom), `ReplaySourceAdapter`, source config, `eventId`; 13 Vitest tests on all four fixtures (prompt #11)
-  - [ ] Part 2: live `FeedSourceAdapter` (User-Agent, timeout), `pollAllSources` with `create()` dedup + `sources` status, `onSchedule` + `onCall pollSourcesNow` ← next
+  - [ ] Part 2a: `pollAllSources` with `create()` dedup + `sources` status, `onCall pollSourcesNow` (replay only), `npm run poll:replay` dev script – code done, lint/build/tests pass; not yet tried against the emulator (prompt #17)
+  - [ ] Part 2b: live `FeedSourceAdapter` (User-Agent, timeout), `onSchedule`
 - [ ] M1 + M2 – auth, rule CRUD, security rules + rules tests
 - [ ] M4 – matcher, email (Mailpit), idempotency (S4)
 - [ ] M5 + M6 – admin view, Fetch now, guard
@@ -20,14 +21,22 @@
 
 **Behind schedule:** design work ran until ~18:15 instead of 17:15, so M3 has ~45 min before the 19:00 break.
 
+## Tonight (replaces this evening's time blocks)
+
+Decided by me: "Tonight a thin, visible slice in 4 steps – see todo-for-night.md."
+
+1. Replay poll → `events` in the Firestore emulator (prompt #17)
+2. Event list on `/alerts`
+3. Simple login + create a rule (minimal rules)
+4. Match → email in Mailpit
+
+If step 4 does not fit, it goes first in the morning; security-rules tests move to the morning.
+
 ## Time blocks
 
 | When | What |
 |---|---|
-| 17:15 – 19:00 | **M3:** replay adapter + fixture tests, live RSS adapter, `pollSourcesNow`. Commit + push before 19:00 |
-| 19:00 – 20:30 | Family – hard stop |
-| 20:30 – 22:30 | **M1 + M2:** auth, rule CRUD, security rules + rules tests |
-| 22:30 – 00:30 | **M4:** matcher + email + idempotency |
+| evening | See **Tonight** above |
 | night | Sleep |
 | morning – 10:30 | **M5 + M6:** admin view, Fetch now, guard |
 | 10:30 – 11:30 | **S1 – Slack**, if it fits |
