@@ -57,13 +57,6 @@ Record of how AI-generated output was reviewed: what was checked, and what was c
 - **What I changed / rejected:** Made Slack depend on email working end-to-end; the Slack commit must not touch matcher/dispatcher code; third channel moved to Could (ADR-011).
 - **Why:** Email validates the pipeline; Slack added as an isolated adapter is concrete evidence of extensibility instead of a claim.
 
-### OPEN – Reddit API access (to verify)
-
-- **What the AI produced:** A warning that Reddit tightened API access in 2023 (rate limits, required User-Agent, OAuth for heavier use), explicitly marked as unverified.
-- **What I checked:** [FILL IN: result of calling the public `.json` / `.rss` endpoints without auth]
-- **What I changed / rejected:** [FILL IN]
-- **Why:** Building on an unverified assumption about a third-party API is a typical AI-induced risk.
-
 ### 2026-10-19 15:51 – Cross-check of scope.md against assumptions.md (second AI tool)
 
 - **What the AI produced:** `scope.md` (planning chat, 15:31) that had drifted from the confirmed Phase 1 assumptions: different sources (r/worldnews, r/news, r/stocks instead of r/nottheonion), Slack as a Must despite A11 deferring it, no mention of the disabled admin actions (A15), a Reddit min. score condition that RSS cannot support, ADR-009 cited for two unrelated things, and no acceptance criterion for A5.
@@ -104,3 +97,23 @@ Record of how AI-generated output was reviewed: what was checked, and what was c
 - **What I checked:** The official repo github.com/firebase/agent-skills – `agents/firestore-rules-author.md` exists.
 - **What I changed / rejected:** Nothing; accepted.
 - **Why:** A named tool or agent in AI-written instructions could be a hallucination; this one was verified.
+
+### 2026-10-19 16:59 – Reddit RSS access verified (curl)
+
+- **What the AI produced:** A warning that Reddit tightened API access in 2023 (rate limits, required User-Agent, OAuth for heavier use), explicitly marked as unverified. *(Was the OPEN item in this log.)*
+- **What I checked:** `curl` against the three feeds from my machine:
+  - BBC World (`https://feeds.bbci.co.uk/news/world/rss.xml`) and BBC Business (`https://feeds.bbci.co.uk/news/business/rss.xml`): `200 text/xml`, with or without a User-Agent.
+  - r/nottheonion (`https://www.reddit.com/r/nottheonion/.rss`): **`403` without a User-Agent**, **`200 application/atom+xml` with a custom User-Agent**. The response is **Atom**, not RSS 2.0.
+- **What I changed / rejected:**
+  - The source adapter always sends a custom User-Agent (`PingMeMaybe/0.1 (+repo URL)`).
+  - The feed parser must handle both RSS 2.0 (`<item>`) and Atom (`<entry>`).
+  - Reddit stays a live source; no OAuth needed at demo polling rates.
+  - Corrected the "all feeds are plain RSS / one input format" claim in `scope.md` and `assumptions.md` (A2). ADR-012 point 1 states the same and is amended in `decisions.md`.
+- **Why:** The AI warning was right about the User-Agent, but my own scope's "all plain RSS" claim was wrong – only a real request showed it.
+
+### 2026-10-19 17:07 – Curated replay fixture for r/nottheonion (planning chat)
+
+- **What the AI produced:** A hand-made Atom fixture `fixtures/reddit-nottheonion.demo.xml` with four fictitious entries: keyword in the title, keyword only in the content (lower case), no keyword, and HTML entities in the title/content.
+- **What I checked:** [FILL IN: compared its structure with the live snapshot `fixtures/reddit-nottheonion.xml` – element names, `<id>` format (`t3_…`), `<content type="html">`, date format]
+- **What I changed / rejected:** Kept it **in addition to** the live snapshot, not instead of it: the live snapshot is the shape reference for the parser test; the curated file only provides deterministic match / no-match cases for the matcher tests and the demo (`florida` rule in the demo script). [FILL IN: any differences found and fixed]
+- **Why:** ADR-010 rejected hand-written fake data as the *only* test data because it would not reflect real feed shapes. A live snapshot cannot guarantee a `florida` item exists, so the demo and matcher tests need a controlled file – but its shape must be checked against the real feed, not trusted.

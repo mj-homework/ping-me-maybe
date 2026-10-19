@@ -3,6 +3,7 @@
 > **Phase 2 output.** Turns the open questions of Phase 1 into a commitment: what is built, what is deliberately not built, and how "done" is verified.
 > All timestamps: Europe/Budapest, `YYYY-MM-DD HH:mm`.
 > **Last updated:** 2026-10-19 15:51 – aligned with `assumptions.md` after AI review (sources, Slack priority, admin actions, Reddit score).
+> **Updated:** 2026-10-19 16:59 – feed URLs and Reddit access verified (User-Agent required, Reddit is Atom); fixtures listed; open questions 1–2 closed.
 
 Related decisions: ADR-007 (sources), ADR-008 (definition of "important"), ADR-009 (dedup), ADR-010 (replay adapter), ADR-011 (channel order).
 
@@ -16,16 +17,18 @@ A logged-in user defines **alert rules** over news feeds. When a new item from *
 
 ## 2. Sources (A2, ADR-007)
 
-| Feed | Covers (brief category) | Character |
-|---|---|---|
-| **BBC World** (RSS) | Breaking news; natural disasters via keywords (`earthquake`, `flood`, …) | Serious |
-| **BBC Business** (RSS) | Market movements | Serious |
-| **Reddit r/nottheonion** (RSS) | Real news that sounds made up | Playful |
+| Feed | URL | Format | Covers (brief category) | Character |
+|---|---|---|---|---|
+| **BBC World** | `https://feeds.bbci.co.uk/news/world/rss.xml` | RSS 2.0 | Breaking news; natural disasters via keywords (`earthquake`, `flood`, …) | Serious |
+| **BBC Business** | `https://feeds.bbci.co.uk/news/business/rss.xml` | RSS 2.0 | Market movements | Serious |
+| **Reddit r/nottheonion** | `https://www.reddit.com/r/nottheonion/.rss` | **Atom** | Real news that sounds made up | Playful |
 
-- All feeds are plain RSS, no API keys.
-- All sources implement one `SourceAdapter` and normalize into the A3 `Event` shape: `{ sourceId, externalId, category, title, summary, url, publishedAt, attributes{} }`.
-- A `ReplaySourceAdapter` serves saved real responses for tests and demo fallback (ADR-010).
-- ⚠️ Exact feed URLs and Reddit's RSS access rules (User-Agent, rate limits) must be verified before building the Reddit adapter (see `ai-review-log.md`, OPEN item).
+- All feeds are public, no API keys. **Two formats:** BBC is RSS 2.0, Reddit is Atom (verified 16:59, see `ai-review-log.md`). One feed parser handles both.
+- **Every request sends a custom User-Agent** – Reddit returns 403 without one.
+- All sources implement one `SourceAdapter` and normalize into the A3 `Event` shape: `{ sourceId, externalId, category, title, summary, url, publishedAt, attributes{} }`. `externalId` = RSS `guid` / Atom `<id>`.
+- A `ReplaySourceAdapter` serves saved responses for tests and demo fallback (ADR-010). Fixtures:
+  - `fixtures/bbc-world.xml`, `fixtures/bbc-business.xml`, `fixtures/reddit-nottheonion.xml` – live snapshots, the shape reference for parser tests.
+  - `fixtures/reddit-nottheonion.demo.xml` – curated, deterministic match / no-match cases for matcher tests and the demo (`florida` rule).
 
 ## 3. User stories (MoSCoW)
 
@@ -133,6 +136,6 @@ Decided now so they aren't decided at 3 a.m. Cut in this order:
 
 ## 7. Open questions carried from Phase 1
 
-- [ ] Exact feed URLs for BBC World, BBC Business and r/nottheonion.
-- [ ] Reddit: does the public `.rss` endpoint work without auth, and what User-Agent / rate limit applies? (blocks the Reddit adapter, not M4)
+- [x] Exact feed URLs for BBC World, BBC Business and r/nottheonion. *(16:59 – see section 2.)*
+- [x] Reddit: does the public `.rss` endpoint work without auth, and what User-Agent / rate limit applies? *(16:59 – works without auth, but only with a custom User-Agent (403 without); format is Atom. Rate limit not measured; demo polling every few minutes is assumed to be safe.)*
 - [ ] Polling interval for the scheduled function – proposal: 5 min.

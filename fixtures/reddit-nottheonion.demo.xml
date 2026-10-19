@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Curated replay fixture for r/nottheonion (Atom, same structure as the live
+  https://www.reddit.com/r/nottheonion/.rss response).
+  Hand-made for deterministic tests and the demo; all titles, users and IDs are
+  fictitious. The live snapshot (reddit-nottheonion.xml) is the shape reference.
+
+  Test cases:
+    t3_pmm0001  "Florida" in the title          -> matches keyword "florida"
+    t3_pmm0002  "florida" only in the content   -> matches (summary match, case-insensitive)
+    t3_pmm0003  no keyword                      -> must NOT match
+    t3_pmm0004  HTML entities in title/content  -> parser must decode &amp; etc.
+-->
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:media="http://search.yahoo.com/mrss/">
+  <category term="nottheonion" label="r/nottheonion"/>
+  <updated>2026-10-19T14:30:00+00:00</updated>
+  <icon>https://www.redditstatic.com/icon.png/</icon>
+  <id>/r/nottheonion/.rss</id>
+  <link rel="self" href="https://www.reddit.com/r/nottheonion/.rss" type="application/atom+xml"/>
+  <link rel="alternate" href="https://www.reddit.com/r/nottheonion/" type="text/html"/>
+  <subtitle>For true stories that are so mind-blowingly ridiculous that you could have sworn they were from The Onion.</subtitle>
+  <title>Not The Onion</title>
+
+  <entry>
+    <author>
+      <name>/u/pmm_fixture_user1</name>
+      <uri>https://www.reddit.com/user/pmm_fixture_user1</uri>
+    </author>
+    <category term="nottheonion" label="r/nottheonion"/>
+    <content type="html">&lt;!-- SC_OFF --&gt;&lt;div class="md"&gt;&lt;p&gt;Submitted link.&lt;/p&gt;&lt;/div&gt;&lt;!-- SC_ON --&gt; &amp;#32; submitted by &amp;#32; &lt;a href="https://www.reddit.com/user/pmm_fixture_user1"&gt; /u/pmm_fixture_user1 &lt;/a&gt;</content>
+    <id>t3_pmm0001</id>
+    <link href="https://www.reddit.com/r/nottheonion/comments/pmm0001/florida_man_tries_to_pay_parking_fine_with_alligator/"/>
+    <updated>2026-10-19T14:20:00+00:00</updated>
+    <published>2026-10-19T14:20:00+00:00</published>
+    <title>Florida man tries to pay parking fine with live alligator, city says it does not accept reptiles</title>
+  </entry>
+
+  <entry>
+    <author>
+      <name>/u/pmm_fixture_user2</name>
+      <uri>https://www.reddit.com/user/pmm_fixture_user2</uri>
+    </author>
+    <category term="nottheonion" label="r/nottheonion"/>
+    <content type="html">&lt;!-- SC_OFF --&gt;&lt;div class="md"&gt;&lt;p&gt;The incident happened at a beach town in florida last weekend.&lt;/p&gt;&lt;/div&gt;&lt;!-- SC_ON --&gt; &amp;#32; submitted by &amp;#32; &lt;a href="https://www.reddit.com/user/pmm_fixture_user2"&gt; /u/pmm_fixture_user2 &lt;/a&gt;</content>
+    <id>t3_pmm0002</id>
+    <link href="https://www.reddit.com/r/nottheonion/comments/pmm0002/town_council_votes_to_make_sandcastles_official/"/>
+    <updated>2026-10-19T13:45:00+00:00</updated>
+    <published>2026-10-19T13:45:00+00:00</published>
+    <title>Town council votes to give sandcastles official building permits</title>
+  </entry>
+
+  <entry>
+    <author>
+      <name>/u/pmm_fixture_user3</name>
+      <uri>https://www.reddit.com/user/pmm_fixture_user3</uri>
+    </author>
+    <category term="nottheonion" label="r/nottheonion"/>
+    <content type="html">&lt;!-- SC_OFF --&gt;&lt;div class="md"&gt;&lt;p&gt;Submitted link.&lt;/p&gt;&lt;/div&gt;&lt;!-- SC_ON --&gt; &amp;#32; submitted by &amp;#32; &lt;a href="https://www.reddit.com/user/pmm_fixture_user3"&gt; /u/pmm_fixture_user3 &lt;/a&gt;</content>
+    <id>t3_pmm0003</id>
+    <link href="https://www.reddit.com/r/nottheonion/comments/pmm0003/library_fines_patron_for_returning_book_too_early/"/>
+    <updated>2026-10-19T12:10:00+00:00</updated>
+    <published>2026-10-19T12:10:00+00:00</published>
+    <title>Library fines patron for returning a book too early</title>
+  </entry>
+
+  <entry>
+    <author>
+      <name>/u/pmm_fixture_user4</name>
+      <uri>https://www.reddit.com/user/pmm_fixture_user4</uri>
+    </author>
+    <category term="nottheonion" label="r/nottheonion"/>
+    <content type="html">&lt;!-- SC_OFF --&gt;&lt;div class="md"&gt;&lt;p&gt;Officials say the &amp;quot;robot &amp;amp; goose&amp;quot; standoff lasted 40 minutes.&lt;/p&gt;&lt;/div&gt;&lt;!-- SC_ON --&gt;</content>
+    <id>t3_pmm0004</id>
+    <link href="https://www.reddit.com/r/nottheonion/comments/pmm0004/delivery_robot_and_goose_standoff/"/>
+    <updated>2026-10-19T11:05:00+00:00</updated>
+    <published>2026-10-19T11:05:00+00:00</published>
+    <title>Delivery robot &amp; goose locked in 40-minute &quot;standoff&quot; on campus</title>
+  </entry>
+</feed>
