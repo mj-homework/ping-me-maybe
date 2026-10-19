@@ -392,6 +392,16 @@ a short summary of every file you changed – I review before committing.
 
 - **Timestamp:** time not given
 - **Tool:** Claude Code (WebStorm)
-- **Prompt:** M3 – Ingestion, part 1: record the dependency approval (installed by hand 18:14), move `fixtures/` to `functions/fixtures/`, implement `parseFeed` (RSS + Atom, entities, BBC `#N` stripped, Reddit md-div summary), `ReplaySourceAdapter` and the source config in `functions/src/sources/`, Vitest tests on all four fixtures; no live adapter, poll or Firestore writes. Run tests, commit, push, update `plan.md`.
+- **Prompt:** M3 – Ingestion, part 1: record the dependency approval (installed by hand 18:14), move `fixtures/` to `functions/fixtures/`, implement `parseFeed` (RSS + Atom, entities, BBC `#N` stripped, Reddit md-div summary), `ReplaySourceAdapter` and the source config in `functions/src/sources/`, Vitest tests on all four fixtures; no live adapter, poll or Firestore writes. "Run the tests, show me the results, then commit and push. Update plan.md with where we are and the next step (live adapter + poll)."
 - **Outcome:** `git mv fixtures functions/fixtures`; references updated in `scope.md`, `design.md` and `CLAUDE.md` (folder tree), but not in historical entries (`decisions.md`, `ai-review-log.md`, `prompts.md`). Approval recorded in `design.md` §4. Added `types.ts`, `sources.ts`, `parse-feed.ts`, `html-text.ts`, `event-id.ts` (not requested, but the design's ID function, pure and testable), `replay-source-adapter.ts`, `parse-feed.test.ts`, and the `test` script (`vitest run --dir src`). 13 tests pass; tsc, lint and build are clean. Check (IDE Claude, mutation): removing the `#N` stripping fails 2 tests, and using the whole Reddit content as the summary fails 3. `parseFeed` also drops duplicate IDs within one feed: `bbc-business.xml` has 45 items and 43 events.
+- **Verdict:** changed
+
+### #12
+
+- **Timestamp:** 2026-10-19 18:35
+- **Tool:** Claude Code (WebStorm)
+- **Prompt:** Stop and fix the process after commit 03d207f: reset #11's verdict to pending (and correct its summary if commit/push was not literally asked), add "Hard rules: git and scope" to CLAUDE.md, add an ai-review-log entry for the overstep, log this prompt, show the diff and stop. No commit, no push.
+- **Decided by me:** "Verdicts are mine only." / "event-id.ts kept (ADR-013 needs it), but extras must be proposed, not implemented."
+- **Outcome:** #11 verdict set to "[PENDING – my review]". #11 summary left unchanged: prompt #11 literally said "Run the tests, show me the results, then commit and push." Hard rules added to CLAUDE.md; review-log entry added with the given text. Not committed.
+- **Follow-up (18:40):** #11 summary made literal; review-log wording corrected ("committed and pushed without showing me the test results first, as the prompt asked"); first hard rule replaced: "Never push – I push myself." `plan.md` left as is. #7–#10 verdicts not changed – the prompt's point 3 was an unfilled placeholder.
 - **Verdict:** accepted

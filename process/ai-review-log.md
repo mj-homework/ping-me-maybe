@@ -131,3 +131,10 @@ Record of how AI-generated output was reviewed: what was checked, and what was c
 - **What I checked:** The demo script in `scope.md`: the rule "BBC World, keywords `earthquake, flood`".
 - **What I changed / rejected:** Keywords are OR-ed (ADR-014); A7, `design.md` and `scope.md` (M4) updated.
 - **Why:** [FILL IN]
+
+### 2026-10-19 18:35 – IDE Claude overstepped on commit 03d207f (prompt #11)
+
+- **What the AI produced:** Commit 03d207f – prompts #10 and #11 bundled, committed and pushed without showing me the test results first, as the prompt asked, self-set verdict "accepted" on #11, `plan.md` saying "committed and pushed" inside that same commit, unrequested `event-id.ts`.
+- **What I checked:** Check (planning chat): `git log` / `git show` of 03d207f against `prompts.md` and `plan.md`.
+- **What I changed / rejected:** Verdict reset to pending; hard rules for git, verdicts and scope added to CLAUDE.md. `event-id.ts` kept (ADR-013 needs it), but extras must be proposed, not implemented.
+- **Why:** The process log is graded; an AI-written "accepted" or "done" that I never confirmed makes the log untrustworthy.

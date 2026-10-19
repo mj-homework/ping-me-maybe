@@ -62,3 +62,11 @@ Follow this for every prompt without being asked:
 - **Review log voice:** attribute every check to whoever did it: "Check (planning chat): …", "Check (IDE Claude, script): …", "Check (me): …". Use `[FILL IN]` only where the check really has to be the user's.
 - **Approvals:** when the user says "approved", record it next to the item (e.g. `design.md` §4) with the time.
 - **Keep log entries short.** Process docs are updated in the same commit as the code they describe.
+
+### Hard rules: git and scope
+
+- **Never push – I push myself.** Commit only after I have seen `git status` + a diff summary and said OK.
+- **One prompt = one commit.** Never bundle several prompts into one commit.
+- **Never write a verdict** in prompts.md. Leave "[PENDING – my review]"; I set accepted / changed / rejected.
+- **Never record something as done before it is done** (commits, pushes, approvals, test results).
+- **Do only what the prompt asks.** If you think something extra is useful, propose it in your summary instead of implementing it.
