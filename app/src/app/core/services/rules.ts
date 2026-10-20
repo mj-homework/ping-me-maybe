@@ -7,6 +7,7 @@ import {
   collection,
   deleteDoc,
   doc,
+  limit,
   onSnapshot,
   orderBy,
   query,
@@ -35,6 +36,12 @@ export class RulesService {
       where('userId', '==', uid),
       orderBy('createdAt', 'desc'),
     );
+    return onSnapshot(q, (snapshot) => next(snapshot.docs.map(toRule)), error);
+  }
+
+  /** Admins only (rules): live list of all users' newest rules. Returns the unsubscribe function. */
+  watchAll(max: number, next: (rules: Rule[]) => void, error: (err: Error) => void): Unsubscribe {
+    const q = query(collection(this.db, 'rules'), orderBy('createdAt', 'desc'), limit(max));
     return onSnapshot(q, (snapshot) => next(snapshot.docs.map(toRule)), error);
   }
 

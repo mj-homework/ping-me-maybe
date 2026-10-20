@@ -193,9 +193,23 @@ Record of how AI-generated output was reviewed: what was checked, and what was c
 - **What I changed / rejected:** Decided by me: "in the readme, how to start mailpit: `.\mailpit.exe  --smtp 127.0.0.1:1025 --listen 127.0.0.1:8025`". IDE Claude added the bash form with the same flags. Then: "mailpit show somehow which is win/mac" – the two blocks are now labelled "Windows (PowerShell)" and "macOS / Linux". Then: "4. Create users - why 2 very similar rows? win/mac again?" – the same labels added to the `admin:grant` and `poll:replay` blocks.
 - **Why:** Explicit flags make the ports visible in the README and bind Mailpit to this machine only; the OS labels tell the reader which block to copy.
 
-### time not given – README ports table labels (prompt #28)
+### 2026-10-20 09:43 – README ports table labels (prompt #28)
 
 - **What the AI produced:** the "Ports and URLs" table labelled the rows "App" and "Emulator UI".
 - **What I checked:** Check (me): reviewed the README table.
 - **What I changed / rejected:** Decided by me: "change: App -> App UI / change: Emulator UI ->  Firebase Emulator UI". Then: "change mailpit to http://localhost:8025" (reverses #27) and "add line: \"Rows with http:// open in a browser; the others are ports the code uses.\"". IDE Claude's recommendation to use `127.0.0.1:4000` for the Emulator UI was not taken.
-- **Why:** Reason not stated.
+- **Why:** Every browser URL now uses the same host form, and `localhost` works here (curl 200); the labels say which UI is which.
+
+### 2026-10-20 09:54 – Try-it steps for a failed delivery (prompt #29)
+
+- **What the AI produced:** nothing yet – the prompt proposed: stop Mailpit, create a second rule (BBC World, `the`), run `poll:replay` again → `failed` rows.
+- **What I checked:** Check (IDE Claude, emulator): after the first poll, a new rule + a second `poll:replay` created 0 events (73 skipped) and 0 new deliveries. The events already exist (deterministic ID), so `matchEvent` does not fire again; A5 would also exclude them (rule newer than `ingestedAt`). After deleting the `events` docs and polling again: 73 events re-created, the new rule got 21 deliveries, the 5 old ones were skipped by delivery ID ("0 created / 1 existing").
+- **What I changed / rejected:** Try-it steps now delete the `events` collection in the Emulator UI before the second poll (or create both rules before the first poll). Proposed in the summary only; no code change.
+- **Why:** Dedup by event ID and A5 together mean a re-poll never matches a new rule, so the demo needs fresh events; deleting `events` in the emulator does that without a second fixture or new code.
+
+### 2026-10-20 09:54 – Mutation-check restore wiped uncommitted rules (prompt #29)
+
+- **What the AI produced:** IDE Claude ran the mutation check on `firestore.rules` while the new `deliveries` block was still uncommitted, then restored with `git checkout`, as the prompt said.
+- **What I checked:** Check (IDE Claude, git diff): the restore went back to HEAD, so the new block was gone as well.
+- **What I changed / rejected:** IDE Claude re-applied the same two edits (diff checked) and re-ran `npm run test:rules` (42/42). Next time: back up an uncommitted file before mutating, or mutate only after committing.
+- **Why:** The prompt's "restore with `git checkout`" assumed the file was committed (planning chat's mistake, carried over from #24). The re-applied block is verified by the full rules suite (42/42), and the lesson keeps the next mutation check from losing work.

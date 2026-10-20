@@ -256,15 +256,76 @@ describe('rules: delete', () => {
   });
 });
 
-describe('catch-all', () => {
+describe('deliveries', () => {
+  const DELIVERY = `deliveries/bbc-world_abc_${RULE_ID}_email`;
+
   beforeEach(async () => {
+    // Same fields as createDeliveries in functions/src/match/match-event.ts.
     await seed({
-      'deliveries/d1': { userId: OWNER },
-      'sources/bbc-world': { name: 'BBC World' },
+      [DELIVERY]: {
+        eventId: 'bbc-world_abc',
+        ruleId: RULE_ID,
+        userId: OWNER,
+        channel: 'email',
+        status: 'pending',
+        error: null,
+        eventTitle: 'Earthquake',
+        eventUrl: 'https://example.com/earthquake',
+        sourceId: 'bbc-world',
+        ruleName: 'Florida news',
+        createdAt: PAST,
+        sentAt: null,
+      },
     });
   });
 
-  it.each(['deliveries/d1', 'sources/bbc-world'])(
+  it('lets an admin get and list', async () => {
+    await assertSucceeds(getDoc(doc(adminDb(), DELIVERY)));
+    await assertSucceeds(getDocs(collection(adminDb(), 'deliveries')));
+  });
+
+  it('lets the owner get their own delivery', async () => {
+    await assertSucceeds(getDoc(doc(ownerDb(), DELIVERY)));
+  });
+
+  it('allows an owner list query filtered to the own uid', async () => {
+    const own = query(collection(ownerDb(), 'deliveries'), where('userId', '==', OWNER));
+    await assertSucceeds(getDocs(own));
+  });
+
+  it('denies another user', async () => {
+    await assertFails(getDoc(doc(otherDb(), DELIVERY)));
+  });
+
+  it('denies an unfiltered list query for a non-admin', async () => {
+    await assertFails(getDocs(collection(ownerDb(), 'deliveries')));
+  });
+
+  it('denies a signed-out user', async () => {
+    await assertFails(getDoc(doc(db(testEnv.unauthenticatedContext()), DELIVERY)));
+  });
+
+  const writers: [string, () => Firestore][] = [
+    ['the owner', ownerDb],
+    ['an admin', adminDb],
+  ];
+
+  it.each(writers)('denies writes by %s', async (_label, firestore) => {
+    await assertFails(setDoc(doc(firestore(), 'deliveries/new'), { userId: OWNER }));
+    await assertFails(updateDoc(doc(firestore(), DELIVERY), { status: 'pending' }));
+    await assertFails(deleteDoc(doc(firestore(), DELIVERY)));
+  });
+});
+
+describe('catch-all', () => {
+  beforeEach(async () => {
+    await seed({
+      'sources/bbc-world': { name: 'BBC World' },
+      'users/alice': { userId: OWNER },
+    });
+  });
+
+  it.each(['sources/bbc-world', 'users/alice'])(
     'denies a signed-in user reading or writing %s',
     async (docPath) => {
       await assertFails(getDoc(doc(ownerDb(), docPath)));

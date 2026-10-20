@@ -1,7 +1,16 @@
 import { Component } from '@angular/core';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-admin-page',
-  template: `<h1>Admin</h1>`,
+  imports: [RouterLink],
+  template: `
+    <h1>Admin</h1>
+    <ul>
+      <li><a routerLink="events">Events</a> – newest ingested events</li>
+      <li><a routerLink="rules">Rules</a> – all users' alert rules</li>
+      <li><a routerLink="deliveries">Deliveries</a> – notification log with status and error</li>
+    </ul>
+  `,
 })
 export class AdminPageComponent {}

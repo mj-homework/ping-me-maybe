@@ -21,6 +21,18 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./features/admin/admin-events-page').then((m) => m.AdminEventsPageComponent),
       },
+      {
+        path: 'rules',
+        loadComponent: () =>
+          import('./features/admin/admin-rules-page').then((m) => m.AdminRulesPageComponent),
+      },
+      {
+        path: 'deliveries',
+        loadComponent: () =>
+          import('./features/admin/admin-deliveries-page').then(
+            (m) => m.AdminDeliveriesPageComponent,
+          ),
+      },
     ],
   },
 ];

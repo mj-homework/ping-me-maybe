@@ -24,7 +24,15 @@ rules_version='2'
 // Rules cannot loop over a list, so they do not check that each keyword is a non-empty
 // string of bounded length; the client normalizes, and the matcher must not trust it.
 //
-// sources, deliveries: not opened yet – denied by the catch-all below.
+// Collection: deliveries
+// Document ID: {eventId}_{ruleId}_{channel} (deterministic, ADR-009)
+// Fields: eventId, ruleId, userId, channel, eventTitle, eventUrl, sourceId, ruleName (string);
+//   status ('pending' | 'sending' | 'sent' | 'failed'); error (string | null);
+//   createdAt (timestamp); sentAt (timestamp | null).
+// Written only by Cloud Functions (Admin SDK, bypasses rules). Clients never write.
+// No recipient (email address, webhook) is stored, so owner and admins may read the whole doc.
+//
+// sources: not opened yet – denied by the catch-all below.
 //
 // ===============================================================
 
@@ -83,9 +91,16 @@ service cloud.firestore {
       allow delete: if isOwner(resource.data.userId);
     }
 
+    // Delivery log. Owners read their own (a list query must filter on userId); admins read
+    // all (/admin/deliveries). No client writes (C2 retry will be a callable).
+    match /deliveries/{deliveryId} {
+      allow read: if isOwner(resource.data.userId) || isAdmin();
+    }
+
     match /{document=**} {
       // Deny-all for every other path. Client access is opened per collection
-      // (events: admin read; rules: owner + admin read); the rest follow (CLAUDE.md, ADR-001).
+      // (events: admin read; rules, deliveries: owner + admin read); sources follows
+      // (CLAUDE.md, ADR-001).
       allow read, write: if false;
     }
   }
