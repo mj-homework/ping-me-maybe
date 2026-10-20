@@ -69,7 +69,9 @@ A normal user: enter an email and password in the app and click **Create account
 
 1. Sign in (admin or normal user).
 2. On `/alerts`, create a rule **before** polling, e.g. source _Reddit_, keyword `florida`, channel email. Rules only match events ingested after the rule was created (A5).
-3. Poll the recorded feeds once, in `functions/`:
+3. Poll the recorded feeds once. As admin, open `/admin/events` and click **Fetch now**: a small table shows created / skipped / error per source, and the events list fills by itself.
+
+   Alternative without the browser or an admin account, in `functions/`:
 
    Windows (PowerShell):
 
@@ -88,11 +90,11 @@ A normal user: enter an email and password in the app and click **Create account
    - `/admin/events`: the ingested events.
    - `/admin/rules`: all users' rules, with a disabled **Disable** button (coming later).
    - `/admin/deliveries`: every notification with its status (`sent` / `failed`) and error.
-6. Optional – **failed delivery:** stop Mailpit, create another rule (e.g. _BBC World_, keyword `the`, email), delete the `events` collection in the Emulator UI (Firestore), and run `poll:replay` again. `/admin/deliveries` shows `failed` rows for the new rule with the SMTP connection error and a disabled **Retry** button. The old `sent` rows do not change and the first rule gets no new rows: each delivery has a fixed ID per event, rule and channel, so it is never created twice.
+6. Optional – **failed delivery:** stop Mailpit, create another rule (e.g. _BBC World_, keyword `the`, email), delete the `events` collection in the Emulator UI (Firestore), and click **Fetch now** (or run `poll:replay`) again. `/admin/deliveries` shows `failed` rows for the new rule with the SMTP connection error and a disabled **Retry** button. The old `sent` rows do not change and the first rule gets no new rows: each delivery has a fixed ID per event, rule and channel, so it is never created twice.
 
-Running `poll:replay` again adds nothing: the events already exist (deduplicated by ID), so no new emails are sent. If you delete `deliveries` too before polling again, the emails are sent again; in real use `deliveries` is never deleted, which is what prevents duplicates (S4).
+Polling again (**Fetch now** or `poll:replay`) adds nothing: the events already exist (deduplicated by ID), so no new emails are sent. If you delete `deliveries` too before polling again, the emails are sent again; in real use `deliveries` is never deleted, which is what prevents duplicates (S4).
 
-Not in the demo yet: Slack, the admin "Fetch now" button.
+Not in the demo yet: Slack.
 
 ### Ports and URLs
 
@@ -124,7 +126,7 @@ Rows with `http://` open in a browser; the others are ports the code uses.
 
 - **Port already in use:** another emulator or app is still running; stop it, or check the ports table.
 - **No email:** is Mailpit running? In the Emulator UI → Firestore, open the `deliveries` document and check `status` and `error`.
-- **No email and no delivery:** were the events already there before the rule? Rules only match newer events (A5) and a re-poll creates no new events (dedup). Delete the `events` collection in the Emulator UI and run `poll:replay` again.
+- **No email and no delivery:** were the events already there before the rule? Rules only match newer events (A5) and a re-poll creates no new events (dedup). Delete the `events` collection in the Emulator UI and click **Fetch now** (or run `poll:replay`) again.
 - **Admin page not visible:** sign out and in again, so the ID token carries the new claim.
 
 ## Development

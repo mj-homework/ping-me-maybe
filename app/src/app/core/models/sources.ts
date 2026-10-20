@@ -15,3 +15,8 @@ export const SOURCE_OPTIONS: readonly SourceOption[] = [
   { id: 'bbc-business', name: 'BBC Business' },
   { id: 'reddit-nottheonion', name: 'Reddit r/nottheonion' },
 ];
+
+/** Display name for a source ID; an unknown ID is returned as it is. */
+export function sourceName(id: string): string {
+  return SOURCE_OPTIONS.find((s) => s.id === id)?.name ?? id;
+}

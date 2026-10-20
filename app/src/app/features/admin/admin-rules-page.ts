@@ -1,7 +1,7 @@
 import { Component, DestroyRef, inject, signal } from '@angular/core';
 import { DatePipe, SlicePipe } from '@angular/common';
 import { Rule } from '../../core/models/rule';
-import { SOURCE_OPTIONS, SourceId } from '../../core/models/sources';
+import { SourceId, sourceName } from '../../core/models/sources';
 import { RulesService } from '../../core/services/rules';
 
 const MAX_RULES = 50;
@@ -74,8 +74,8 @@ export class AdminRulesPageComponent {
     inject(DestroyRef).onDestroy(unsubscribe);
   }
 
-  /** Display names from `SOURCE_OPTIONS`; an unknown ID is shown as it is. */
+  /** Display names via `sourceName()`; an unknown ID is shown as it is. */
   protected sourceNames(ids: readonly SourceId[]): string {
-    return ids.map((id) => SOURCE_OPTIONS.find((s) => s.id === id)?.name ?? id).join(', ');
+    return ids.map(sourceName).join(', ');
   }
 }

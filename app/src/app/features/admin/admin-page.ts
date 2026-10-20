@@ -7,7 +7,7 @@ import { RouterLink } from '@angular/router';
   template: `
     <h1>Admin</h1>
     <ul>
-      <li><a routerLink="events">Events</a> – newest ingested events</li>
+      <li><a routerLink="events">Events</a> – newest ingested events and the Fetch now button</li>
       <li><a routerLink="rules">Rules</a> – all users' alert rules</li>
       <li><a routerLink="deliveries">Deliveries</a> – notification log with status and error</li>
     </ul>
