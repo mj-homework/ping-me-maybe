@@ -42,7 +42,7 @@
 | # | Question | Assumption | Status |
 |---|---|---|---|
 | A15 | What is the admin view? | Views: ingested events, delivery log, all users' rules, sources + "Fetch now" (works from day one). **Write actions (e.g. disable rule, retry delivery) are present in the UI but disabled** in the first round; enabled one by one as time allows. | Confirmed |
-| A16 | How does someone become admin? | `admin: true` custom claim set by a seed script against the emulator. No in-app role management. | Default |
+| A16 | How does someone become admin? | `admin: true` custom claim set by a seed script against the emulator (`npm run admin:grant -- <email> [password]` in `functions/`, `src/scripts/grant-admin.ts`; creates the user if missing). No in-app role management. | Default |
 
 ## Non-functional
 

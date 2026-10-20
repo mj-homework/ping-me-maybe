@@ -11,7 +11,8 @@
     "start": "npm run shell",
     "deploy": "firebase deploy --only functions",
     "logs": "firebase functions:log",
-    "poll:replay": "npm run build && node lib/scripts/poll-replay.js"
+    "poll:replay": "npm run build && node lib/scripts/poll-replay.js",
+    "admin:grant": "npm run build && node lib/scripts/grant-admin.js"
   },
   "engines": {
     "node": "24"

@@ -2,26 +2,11 @@
  * Dev script: runs one replay poll against the Firestore emulator, without
  * login or the Functions emulator. Usage: `npm run poll:replay` in functions/.
  */
-import { readFileSync } from 'node:fs';
-import * as path from 'node:path';
 import { initializeApp } from 'firebase-admin/app';
 import { getFirestore } from 'firebase-admin/firestore';
 import { createAdapters } from '../poll/adapters';
 import { pollAllSources } from '../poll/poll-all-sources';
-
-// Same relative location from src/scripts and from the compiled lib/scripts.
-const FIREBASERC = path.join(__dirname, '..', '..', '..', '.firebaserc');
-
-/**
- * @return {string} The default project ID from .firebaserc, so the documents
- *   land in the namespace the Emulator UI shows.
- */
-function defaultProjectId(): string {
-  const rc = JSON.parse(readFileSync(FIREBASERC, 'utf8')) as { projects?: { default?: unknown } };
-  const projectId = rc.projects?.default;
-  if (typeof projectId !== 'string') throw new Error(`No default project in ${FIREBASERC}`);
-  return projectId;
-}
+import { defaultProjectId } from './project-id';
 
 /** Polls all sources once in replay mode and prints the summary. */
 async function main(): Promise<void> {

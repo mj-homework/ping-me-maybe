@@ -4,6 +4,16 @@ This project was generated using [Angular CLI](https://github.com/angular/angula
 
 The Angular app lives in `app/`, next to the Cloud Functions in `functions/`. Run all Angular commands below from `app/` (`cd app`, then `npm install` once).
 
+## Make yourself admin
+
+With the emulators running, run this from `functions/` (PowerShell). It creates the user if it does not exist yet and gives it the `admin` custom claim, so you do not need to set claims in the Emulator UI:
+
+```powershell
+$env:FIREBASE_AUTH_EMULATOR_HOST='127.0.0.1:9099'; npm run admin:grant -- admin@example.com admin123
+```
+
+Then sign in with that user. This is emulator-only demo data: the script refuses to run without `FIREBASE_AUTH_EMULATOR_HOST`. If you were already signed in as that user, sign out and in again.
+
 ## Development server
 
 To start a local development server, run:

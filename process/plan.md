@@ -16,7 +16,7 @@
 - [ ] M1 + M2 – auth, rule CRUD, security rules + rules tests
   - [x] Emulator login (email/password), sign-out – code in prompt #19; tried in the browser by me, works (~23:30)
   - [x] Rule form on `/alerts` (create, list, pause/resume, delete) + `rules` security rules + index – code in prompt #21, hardened in #22; tried in the browser by me, works (~00:50)
-  - [ ] Rules tests for `rules` and `events` (morning)
+  - [x] Rules tests for `rules` and `events` (prompt #24)
 - [x] M5 part: `/admin/events` list, `admin` guard, `events` admin-read rule – code in prompts #19/#20; tried in the browser by me, works (~23:30)
 - [x] M4 – matcher, email (Mailpit), idempotency (S4) – code in #23 (matcher + `matchEvent` + `sendDelivery` + email channel, matcher tests); tried by me, works (~01:27)
 - [ ] M5 + M6 – admin view, Fetch now, guard
