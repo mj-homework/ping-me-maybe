@@ -185,3 +185,10 @@ Record of how AI-generated output was reviewed: what was checked, and what was c
   - Check (IDE Claude, npm audit): 29 moderate before, 34 (29 moderate, 5 high) after; the 5 high come from `@grpc/grpc-js` ≤1.13.5 under the `firebase` client SDK (dev-only, talks to the local emulator).
 - **What I changed / rejected:** IDE Claude stopped and asked. Decided by me: "6.0.0 + firebase 13.0.0" – both pinned exact (dev), one day short of the two-week rule.
 - **Why:** @firebase/rules-unit-testing 6.0.0 + firebase 13.0.0 as an exception to the two-week rule – 6.0.0 is 13 days old (one day short), it is the only release whose peer matches firebase 13.x, and firebase 13.0.0 from the same release has run in app/ since #19. 5.0.2 would put firebase 12 in functions/ and 13 in app/ for no gain, since the emulator evaluates the rules, not the SDK.
+
+### time not given – Mailpit start command in the README (prompt #26)
+
+- **What the AI produced:** README step 3.1 started Mailpit as plain `.mailpit.exe` / `./mailpit`, relying on its default ports.
+- **What I checked:** Check (me): reviewed the README.
+- **What I changed / rejected:** Decided by me: "in the readme, how to start mailpit: `.mailpit.exe  --smtp 127.0.0.1:1025 --listen 127.0.0.1:8025`". IDE Claude added the bash form with the same flags. Then: "mailpit show somehow which is win/mac" – the two blocks are now labelled "Windows (PowerShell)" and "macOS / Linux". Then: "4. Create users - why 2 very similar rows? win/mac again?" – the same labels added to the `admin:grant` and `poll:replay` blocks.
+- **Why:** Reason not stated.

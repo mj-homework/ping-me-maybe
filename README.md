@@ -1,71 +1,128 @@
-# PingMeMaybe
+# Ping Me Maybe
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 22.2.3.
+Users set up alert rules (sources + keywords) and get an email when a matching world event (news, markets, odd news) comes in; admins see the ingested events.
 
-The Angular app lives in `app/`, next to the Cloud Functions in `functions/`. Run all Angular commands below from `app/` (`cd app`, then `npm install` once).
+## How to try it locally
 
-## Make yourself admin
+Everything runs on the Firebase Emulator Suite with the demo project `demo-ping-me-maybe`. There is no real Firebase project, no billing and nothing to configure.
 
-With the emulators running, run this from `functions/` (PowerShell). It creates the user if it does not exist yet and gives it the `admin` custom claim, so you do not need to set claims in the Emulator UI:
+### 1. Prerequisites
+
+- **Node.js 24** (`engines` in `functions/package.json`) and **npm** (npm 12 is used here).
+- **Firebase CLI** (`npm install -g firebase-tools`); major version 15 is used here.
+- **JDK 21 or newer**, for the Firestore emulator (the Firebase CLI's minimum is Java 21).
+- **Mailpit**, to catch the emails: download the release zip for your OS from [Mailpit's GitHub releases page](https://github.com/axllent/mailpit/releases) and unzip it into any folder; no install needed.
+  Docker also works: `docker run -p 1025:1025 -p 8025:8025 axllent/mailpit`.
+
+### 2. Install once
+
+```powershell
+cd functions; npm install; cd ..
+cd app; npm install; cd ..
+```
+
+npm 12 blocks install scripts; `app/package.json` (`allowScripts`) already allows the one that is needed.
+
+### 3. Start, in order, one terminal each
+
+1. **Mailpit**, from its folder.
+
+   Windows (PowerShell):
+
+   ```powershell
+   .\mailpit.exe --smtp 127.0.0.1:1025 --listen 127.0.0.1:8025
+   ```
+
+   macOS / Linux:
+
+   ```bash
+   ./mailpit --smtp 127.0.0.1:1025 --listen 127.0.0.1:8025
+   ```
+
+   SMTP on 1025 and the UI on 8025, bound to this machine only; this matches the functions' `SMTP_HOST` / `SMTP_PORT` defaults, so there is no config.
+
+2. **Build the functions**, in `functions/`: `npm run build`
+3. **Emulators**, in the repo root: `firebase emulators:start`
+4. **App**, in `app/`: `npm start`, then open http://localhost:4200
+
+### 4. Create users
+
+Admin (emulator-only demo data; the script refuses to run without the env var), in `functions/`:
+
+Windows (PowerShell):
 
 ```powershell
 $env:FIREBASE_AUTH_EMULATOR_HOST='127.0.0.1:9099'; npm run admin:grant -- admin@example.com admin123
 ```
 
-Then sign in with that user. This is emulator-only demo data: the script refuses to run without `FIREBASE_AUTH_EMULATOR_HOST`. If you were already signed in as that user, sign out and in again.
-
-## Development server
-
-To start a local development server, run:
+macOS / Linux:
 
 ```bash
-ng serve
+FIREBASE_AUTH_EMULATOR_HOST=127.0.0.1:9099 npm run admin:grant -- admin@example.com admin123
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+The script creates the user if it does not exist yet and gives it the `admin` custom claim. If that user was already signed in, sign out and in again.
 
-## Code scaffolding
+A normal user: enter an email and password in the app and click **Create account**.
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+### 5. Demo flow
 
-```bash
-ng generate component component-name
-```
+1. Sign in (admin or normal user).
+2. On `/alerts`, create a rule **before** polling, e.g. source _Reddit_, keyword `florida`, channel email. Rules only match events ingested after the rule was created (A5).
+3. Poll the recorded feeds once, in `functions/`:
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+   Windows (PowerShell):
 
-```bash
-ng generate --help
-```
+   ```powershell
+   $env:FIRESTORE_EMULATOR_HOST='127.0.0.1:8080'; npm run poll:replay
+   ```
 
-## Building
+   macOS / Linux:
 
-To build the project run:
+   ```bash
+   FIRESTORE_EMULATOR_HOST=127.0.0.1:8080 npm run poll:replay
+   ```
 
-```bash
-ng build
-```
+4. Open Mailpit at http://localhost:8025: 2 emails for the `florida` rule.
+5. As admin, open `/admin/events` to see the ingested events.
 
-This will compile your project and store the build artifacts in the `app/dist/` directory. By default, the production build optimizes your application for performance and speed.
+Running `poll:replay` again adds nothing: the events already exist (deduplicated by ID), so no new emails are sent.
 
-## Running unit tests
+Not in the demo yet: Slack, the admin "Fetch now" button, the admin deliveries view.
 
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+### Ports and URLs
 
-```bash
-ng test
-```
+| What         | Where                 |
+| ------------ | --------------------- |
+| App          | http://localhost:4200 |
+| Emulator UI  | http://localhost:4000 |
+| Firestore    | 127.0.0.1:8080        |
+| Auth         | 127.0.0.1:9099        |
+| Functions    | 127.0.0.1:5001        |
+| Mailpit UI   | http://localhost:8025 |
+| Mailpit SMTP | 127.0.0.1:1025        |
 
-## Running end-to-end tests
+### After a restart or rebuild
 
-For end-to-end (e2e) testing, run:
+- Emulator data is empty on every start: run `admin:grant` again and re-create your rules.
+- After changing `functions/src`, run `npm run build` in `functions/`. The emulator reloads `lib/` by itself; it does not compile TypeScript.
+- The app reloads by itself.
 
-```bash
-ng e2e
-```
+### Tests
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+- `functions/`: `npm test` (unit tests, no emulator).
+- `functions/`: `npm run test:rules` (security rules). It starts its own Firestore emulator, so stop `firebase emulators:start` first (port 8080).
+- `app/`: `ng test` (or `npm test` without a global Angular CLI).
 
-## Additional Resources
+### Troubleshooting
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+- **Port already in use:** another emulator or app is still running; stop it, or check the ports table.
+- **No email:** is Mailpit running? In the Emulator UI → Firestore, open the `deliveries` document and check `status` and `error`.
+- **Admin page not visible:** sign out and in again, so the ID token carries the new claim.
+
+## Development
+
+In `app/`:
+
+- `ng build` (or `npm run build`): production build into `app/dist/`.
+- `ng test` (or `npm test`): unit tests with Vitest.
