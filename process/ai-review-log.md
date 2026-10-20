@@ -169,7 +169,19 @@ Record of how AI-generated output was reviewed: what was checked, and what was c
 
 ### 2026-10-20 01:09 – nodemailer version and the `florida` count (prompt #23)
 
-- **What the AI produced:** nothing yet – two checks during #23 found gaps in the prompt's expectations.
-- **What I checked:** Check (IDE Claude, npm registry): `nodemailer@latest` (10.1.7) was 2 days old. Check (IDE Claude, test): the `florida` rule matches two entries of the demo fixture (title + summary-only), not "exactly one".
-- **What I changed / rejected:** IDE Claude pinned `nodemailer` 10.0.15 (2026-10-05); the test asserts both entries (t3_pmm0001, t3_pmm0002). [FILL IN – keep or change]
-- **Why:** Reason not stated.
+- **What the AI produced:** the #23 matcher, triggers and email channel.
+- **What I checked:**
+  - Check (IDE Claude, npm registry): `nodemailer@latest` (10.1.7) was 2 days old.
+  - Check (IDE Claude, test): the `florida` rule matches two demo entries (title + summary-only), not one.
+  - Check (planning chat): reviewed the diff, including the `shared/errors.ts` extraction.
+- **What I changed / rejected:** kept the exact pin to 10.0.15; kept the two-entry test; the "exactly one" in my prompt was wrong (the fixture header already says two).
+- **Why:** a 2-day-old release with five publishes in one day is a supply-chain risk, and a two-week-old version is enough for SMTP to Mailpit. The test should follow the fixture, not my prompt.
+
+### 2026-10-20 08:15 – `@firebase/rules-unit-testing` version vs. the two-week rule (prompt #24)
+
+- **What the AI produced:** nothing yet – a registry check before installing found a conflict in the prompt's version rules.
+- **What I checked:**
+  - Check (IDE Claude, npm registry): `@firebase/rules-unit-testing` 6.0.0 (the only release with peer `firebase ^13`) and `firebase` 13.0.0 were published 2026-10-07, 13 days old. The newest release at least two weeks old, 5.0.2 (2026-08-19), needs `firebase ^12`, not the app's 13.x. Neither package has install scripts.
+  - Check (IDE Claude, npm audit): 29 moderate before, 34 (29 moderate, 5 high) after; the 5 high come from `@grpc/grpc-js` ≤1.13.5 under the `firebase` client SDK (dev-only, talks to the local emulator).
+- **What I changed / rejected:** IDE Claude stopped and asked. Decided by me: "6.0.0 + firebase 13.0.0" – both pinned exact (dev), one day short of the two-week rule.
+- **Why:** @firebase/rules-unit-testing 6.0.0 + firebase 13.0.0 as an exception to the two-week rule – 6.0.0 is 13 days old (one day short), it is the only release whose peer matches firebase 13.x, and firebase 13.0.0 from the same release has run in app/ since #19. 5.0.2 would put firebase 12 in functions/ and 13 in app/ for no gain, since the emulator evaluates the rules, not the SDK.

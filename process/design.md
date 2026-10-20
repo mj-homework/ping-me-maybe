@@ -147,7 +147,7 @@ A crash between `send()` and the status write leaves the delivery in `sending` a
 
 ## 4. Dependencies (to be approved before installing)
 
-**Approved:** `fast-xml-parser` and `vitest` (dev) in `functions/` – installed by me, 2026-10-19 18:14 (prompt #11). `firebase` in `app/` – approved by me in prompt #19, 2026-10-19 23:05 ("add the modular `firebase` JS SDK"), installed by IDE Claude (13.0.0; install script allowed for `@firebase/util` only). `nodemailer` + `@types/nodemailer` (dev) in `functions/` – approved by me in prompt #23, 2026-10-20 01:09, installed by IDE Claude (10.0.15 pinned, 8.0.2; no install scripts). The others are still pending.
+**Approved:** `fast-xml-parser` and `vitest` (dev) in `functions/` – installed by me, 2026-10-19 18:14 (prompt #11). `firebase` in `app/` – approved by me in prompt #19, 2026-10-19 23:05 ("add the modular `firebase` JS SDK"), installed by IDE Claude (13.0.0; install script allowed for `@firebase/util` only). `nodemailer` + `@types/nodemailer` (dev) in `functions/` – approved by me in prompt #23, 2026-10-20 01:09, installed by IDE Claude (10.0.15 pinned, 8.0.2; no install scripts). `@firebase/rules-unit-testing` + its peer `firebase` (dev) – approved by me in prompt #24, 2026-10-20 08:15, installed by IDE Claude (6.0.0 and 13.0.0 pinned, 13 days old – see `ai-review-log.md`; no install scripts) in **`functions/`, not root**: the root has no `package.json`, and `functions/` already has Vitest. All packages in this table are now approved.
 
 | Package | Where | Why |
 |---|---|---|

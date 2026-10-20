@@ -18,7 +18,7 @@
   - [x] Rule form on `/alerts` (create, list, pause/resume, delete) + `rules` security rules + index – code in prompt #21, hardened in #22; tried in the browser by me, works (~00:50)
   - [ ] Rules tests for `rules` and `events` (morning)
 - [x] M5 part: `/admin/events` list, `admin` guard, `events` admin-read rule – code in prompts #19/#20; tried in the browser by me, works (~23:30)
-- [ ] M4 – matcher, email (Mailpit), idempotency (S4) – code in #23 (matcher + `matchEvent` + `sendDelivery` + email channel, matcher tests), not yet tried
+- [x] M4 – matcher, email (Mailpit), idempotency (S4) – code in #23 (matcher + `matchEvent` + `sendDelivery` + email channel, matcher tests); tried by me, works (~01:27)
 - [ ] M5 + M6 – admin view, Fetch now, guard
 - [ ] S1 – Slack (only if M4 passes)
 - [ ] README, demo rehearsal, close logs, final push
@@ -44,15 +44,20 @@ If step 4 does not fit, it goes first in the morning; security-rules tests move 
 |---|---|
 | evening | See **Tonight** above |
 | night | Sleep |
-| morning – 10:30 | **M5 + M6:** admin view, Fetch now, guard |
-| 10:30 – 11:30 | **S1 – Slack**, if it fits |
+| 08:15 – 09:00 | Rules tests |
+| 09:00 – 09:30 | Admin claim seed script (A16) |
+| 09:30 – 10:45 | **M5** admin view (rules, deliveries) + **M6** Fetch now button |
+| 10:45 – 11:30 | **S1 – Slack**, if it fits |
 | 11:30 – 13:00 | README, demo rehearsal, logs, final push |
+
+Decided by me: "Morning order: rules tests first (never cut), live adapter after Slack."
 
 Ingestion goes first because it has the most uncertainty (live feeds, formats, dedup) and is testable without UI.
 
 ## Cut lines (`scope.md` §5)
 
 1. Could items (C1–C6) → 2. S3, then S2 → 3. S1 Slack → 4. live Reddit adapter (replay only).
+Live `FeedSourceAdapter` + `onSchedule` (M3 part 2b) go after S1 – replay is enough for the demo.
 **Never cut:** idempotency (S4), security rules, `ai-review-log.md`, README.
 If M4 is not done by midnight: it goes first in the morning and the admin view shrinks.
 
