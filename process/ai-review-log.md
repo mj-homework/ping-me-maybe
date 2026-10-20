@@ -226,4 +226,4 @@ Record of how AI-generated output was reviewed: what was checked, and what was c
 - **What the AI produced:** nothing yet – the prompt's README step: stop Mailpit, delete `events`, run `poll:replay` → `failed` rows.
 - **What I checked:** Check (IDE Claude, code + #29 emulator run): re-created events get the same IDs, so an existing rule's delivery IDs already exist and are skipped ("0 created / 1 existing" in #29); only a rule without deliveries for those events gets new (here `failed`) rows.
 - **What I changed / rejected:** IDE Claude added "create another rule (e.g. BBC World, `the`)" to the README step, the `design.md` §5 resolution and `scope.md` demo step 6.
-- **Why:** [FILL IN]
+- **Why:** The prompt’s step left out the new rule (planning chat’s mistake); without it the demo shows nothing, because the old rule’s deliveries already exist and are skipped by ID.
