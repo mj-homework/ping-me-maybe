@@ -24,7 +24,7 @@
   - [x] M5 – /admin/rules, /admin/deliveries, deliveries read rule + rules tests, disabled Disable/Retry (A15) – code in #29; tried in the browser by me, works (~10:25)
   - [x] M6 – Fetch now button (admin only) – code in #31; tried in the browser by me, works (~11:07)
 - [ ] S1 – Slack (only if M4 passes) – cut – designed (ADR-011), not built; time went to M2 editing and M6
-- [ ] README, demo rehearsal, close logs, final push
+- [x] README, demo rehearsal, close logs, final push
 
 **Behind schedule:** design work ran until ~18:15 instead of 17:15, so M3 has ~45 min before the 19:00 break.
 
