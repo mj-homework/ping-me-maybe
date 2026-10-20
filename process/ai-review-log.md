@@ -227,3 +227,12 @@ Record of how AI-generated output was reviewed: what was checked, and what was c
 - **What I checked:** Check (IDE Claude, code + #29 emulator run): re-created events get the same IDs, so an existing rule's delivery IDs already exist and are skipped ("0 created / 1 existing" in #29); only a rule without deliveries for those events gets new (here `failed`) rows.
 - **What I changed / rejected:** IDE Claude added "create another rule (e.g. BBC World, `the`)" to the README step, the `design.md` §5 resolution and `scope.md` demo step 6.
 - **Why:** The prompt’s step left out the new rule (planning chat’s mistake); without it the demo shows nothing, because the old rule’s deliveries already exist and are skipped by ID.
+
+### 2026-10-20 11:48 – Rule editing (prompt #32)
+
+- **What the AI produced:** `RulesService.update`, Edit on `/alerts` reusing the form, an owner-edit rules test, `test:rules` run on other ports while my emulators ran.
+- **What I checked:**
+  - Check (planning chat), 11:41–11:48: reviewed the report – rules tests ran via a temporary config on other ports, my emulator data stayed (read-only count), `update` sends only name/sourceIds/keywords/updatedAt, `RuleChanges` type (Pick) keeps userId/createdAt/channels/active out at compile time.
+  - Check (me), 11:45–11:48: browser – edited the florida rule to keyword `the` + BBC World, deleted events, Fetch now → 21 emails, no new florida emails; Save changes disabled with no keywords; source names on /admin/events.
+- **What I changed / rejected:** nothing; accepted as is.
+- **Why:** The rules tests could have wiped my running emulator data, and an edit must not change createdAt (A5). Browser checks are mine (#26), and the edit had to take effect only on newly ingested events.

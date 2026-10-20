@@ -6,9 +6,9 @@
     @if (auth.isAdmin()) {
       <strong> (admin) </strong>
       <span> - </span>
-      <a routerLink="/alerts">Alerts</a>
+      <a routerLink="/alerts" routerLinkActive="active">Alerts</a>
       <span> - </span>
-      <a routerLink="/admin">Admin</a>
+      <a routerLink="/admin" routerLinkActive="active">Admin</a>
     }
     <span> - </span>
     <button type="button" (click)="signOut()">Sign out</button>

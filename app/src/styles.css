@@ -1,1 +1,223 @@
-/* You can add global styles to this file, and also import other style files */
+/* Hand-written base styles (#33): no UI library. Element selectors first, few classes. */
+
+:root {
+  --text: #1f2933;
+  --muted: #616e7c;
+  --border: #d3d9e0;
+  --row-alt: #f5f7fa;
+  --primary: #1d4ed8;
+  --primary-hover: #1e40af;
+  --error: #b42318;
+  --error-bg: #fef3f2;
+  --disabled-bg: #e4e7eb;
+  --disabled-text: #8a94a1;
+}
+
+body {
+  margin: 0;
+  background: #fff;
+  color: var(--text);
+  font-family:
+    system-ui,
+    -apple-system,
+    'Segoe UI',
+    Roboto,
+    'Helvetica Neue',
+    Arial,
+    sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+/* Header row (app.html): email, admin links, sign-out or the sign-in form. */
+header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5em;
+  padding: 0.75em 1.5em;
+  border-bottom: 1px solid var(--border);
+  background: var(--row-alt);
+}
+
+header form {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5em;
+}
+
+header input {
+  width: auto;
+}
+
+header a {
+  padding: 0.25em 0.5em;
+  border-radius: 4px;
+  text-decoration: none;
+}
+
+header a:hover {
+  background: var(--border);
+}
+
+header a.active {
+  background: var(--primary);
+  color: #fff;
+}
+
+/* Page content: everything after the header (router outlet siblings). */
+header ~ :not(router-outlet) {
+  display: block;
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 1.5em 2em;
+}
+
+h1 {
+  font-size: 1.6em;
+  margin: 1em 0 0.5em;
+}
+
+h2 {
+  font-size: 1.25em;
+  margin: 1.5em 0 0.5em;
+}
+
+a {
+  color: var(--primary);
+}
+
+code {
+  font-size: 0.9em;
+  background: var(--row-alt);
+  padding: 0.1em 0.3em;
+  border-radius: 3px;
+}
+
+/* Tables (admin lists, My rules, Fetch now result). */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 0.75em 0 1.5em;
+}
+
+th,
+td {
+  padding: 0.5em 0.75em;
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+  vertical-align: top;
+  overflow-wrap: anywhere;
+}
+
+th {
+  background: var(--row-alt);
+  font-weight: 600;
+  border-bottom: 2px solid var(--border);
+}
+
+tbody tr:nth-child(even) {
+  background: var(--row-alt);
+}
+
+td button + button {
+  margin-left: 0.4em;
+}
+
+/* Forms (/alerts). Labels sit above their inputs. */
+label {
+  display: block;
+  font-weight: 600;
+}
+
+input:not([type='checkbox']),
+select {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 28em;
+  margin-top: 0.25em;
+  padding: 0.4em 0.6em;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  font: inherit;
+  font-weight: normal;
+}
+
+header input:not([type='checkbox']) {
+  display: inline-block;
+  width: 14em;
+  margin-top: 0;
+}
+
+fieldset {
+  max-width: 28em;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 0.5em 1em;
+}
+
+legend {
+  font-weight: 600;
+  padding: 0 0.25em;
+}
+
+fieldset label {
+  font-weight: normal;
+  margin: 0.25em 0;
+}
+
+input[type='checkbox'] {
+  margin-right: 0.4em;
+}
+
+/* Buttons: submit = primary, other buttons = secondary. */
+button {
+  padding: 0.4em 0.9em;
+  border: 1px solid var(--primary);
+  border-radius: 4px;
+  background: #fff;
+  color: var(--primary);
+  font: inherit;
+  cursor: pointer;
+}
+
+button:hover {
+  background: var(--row-alt);
+}
+
+button[type='submit'] {
+  background: var(--primary);
+  color: #fff;
+}
+
+button[type='submit']:hover {
+  background: var(--primary-hover);
+}
+
+form button + button {
+  margin-left: 0.5em;
+}
+
+/* Disabled must look disabled (A15 Disable / Retry, Save changes, Fetching…). */
+button:disabled,
+button:disabled:hover {
+  background: var(--disabled-bg);
+  border-color: var(--border);
+  color: var(--disabled-text);
+  cursor: not-allowed;
+}
+
+/* Error text: every error in the app is a role="alert" paragraph. */
+[role='alert'] {
+  color: var(--error);
+  background: var(--error-bg);
+  border-left: 4px solid var(--error);
+  padding: 0.5em 0.75em;
+}
+
+header [role='alert'] {
+  flex-basis: 100%;
+  margin: 0;
+}
