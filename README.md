@@ -2,6 +2,16 @@
 
 Users set up alert rules (sources + keywords) and get an email when a matching world event (news, markets, odd news) comes in; admins see the ingested events.
 
+## How this was built
+
+Development used two Claudes:
+
+- **Claude Code in the IDE** wrote the code and the process logs.
+- **A separate planning chat** (Claude desktop app, Windows) planned the steps, wrote the prompts and checked the IDE Claude's reports.
+- **I** decided, checked in the browser, committed, pushed and merged.
+
+That is why the logs in `process/` label each check as "Check (planning chat)", "Check (IDE Claude, …)" or "Check (me)". Every prompt with its outcome is in [`process/prompts.md`](process/prompts.md), every review of AI output in [`process/ai-review-log.md`](process/ai-review-log.md), and the hand-offs between planning chats in [`process/chat-summaries/`](process/chat-summaries/).
+
 ## How to try it locally
 
 Everything runs on the Firebase Emulator Suite with the demo project `demo-ping-me-maybe`. There is no real Firebase project, no billing and nothing to configure.
@@ -86,7 +96,7 @@ A normal user: enter an email and password in the app and click **Create account
    ```
 
 4. Open Mailpit at http://localhost:8025: 2 emails for the `florida` rule.
-5. As admin, open `/admin` (or the **Admin** link in the header):
+5. As admin, open `/admin` (the **Admin** link in the header); the tabs **Events / Rules / Deliveries** switch between the admin pages (hover a tab for a short description):
    - `/admin/events`: the ingested events.
    - `/admin/rules`: all users' rules, with a disabled **Disable** button (coming later).
    - `/admin/deliveries`: every notification with its status (`sent` / `failed`) and error.
@@ -96,7 +106,7 @@ Polling again (**Fetch now** or `poll:replay`) adds nothing: the events already 
 
 Rules can be edited on `/alerts` (**Edit**: name, sources, keywords). An edit applies to events ingested afterwards; past deliveries stay as they are.
 
-Not in the demo yet: Slack.
+What is not built yet: see [Not built](#not-built).
 
 ### Ports and URLs
 
@@ -130,6 +140,19 @@ Rows with `http://` open in a browser; the others are ports the code uses.
 - **No email:** is Mailpit running? In the Emulator UI → Firestore, open the `deliveries` document and check `status` and `error`.
 - **No email and no delivery:** were the events already there before the rule? Rules only match newer events (A5) and a re-poll creates no new events (dedup). Delete the `events` collection in the Emulator UI and click **Fetch now** (or run `poll:replay`) again.
 - **Admin page not visible:** sign out and in again, so the ID token carries the new claim.
+
+## Not built
+
+- **Slack channel:** designed (ADR-011), not built. A rule can only use email.
+- **Live feed adapter and schedule** (M3 part 2b): only the replay sources (recorded feeds in `functions/fixtures/`), polled with **Fetch now** or `poll:replay`.
+- **Admin write actions** (C2–C4): **Disable** (rules) and **Retry** (deliveries) are shown, but disabled.
+
+## Known limitations
+
+- Keyword matching is substring-based: `rain` also matches "Ukraine" (#23).
+- `ng build` shows a bundle budget warning (initial ~848 kB > 500 kB); it is a warning only.
+- Wide tables scroll the page on small screens.
+- Tooltips are the browser's native `title`.
 
 ## Development
 

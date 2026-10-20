@@ -238,3 +238,10 @@ Record of how AI-generated output was reviewed: what was checked, and what was c
 - **Why:**
   - Check (planning chat): the rules tests could have wiped my running emulator data, and an edit must not change createdAt (A5).
   - Check (me): browser checks are mine (#26), and the edit had to take effect only on newly ingested events.
+
+### 2026-10-20 12:22 – Unrequested Slack failure sentence in the README (prompt #35)
+
+- **What the AI produced:** the README "Not built" Slack bullet got an extra sentence that the prompt did not ask for: "a delivery for `slack` fails with "Channel "slack" not available"" (seen in the #29 emulator check, with a rule written by the Admin SDK).
+- **What I checked:** Check (me): asked why it was there. Check (IDE Claude): the text is accurate (`send-delivery.ts`), but the app cannot create a Slack rule (checkbox disabled, `create` always sends `['email']`), so a reader never sees it.
+- **What I changed / rejected:** Decided by me: "as you suggested" – sentence removed; the bullet keeps "A rule can only use email."
+- **Why:** IDE Claude's explanation, accepted by me: an internal detail from a test setup that a README reader can never reproduce in the app is misleading.

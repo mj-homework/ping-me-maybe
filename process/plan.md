@@ -9,11 +9,11 @@
 - [x] Config fixes (`.firebaserc`, deny-all `firestore.rules`), feeds verified with curl, fixtures captured
 - [x] Phase 3: `design.md` (accepted 17:26), ADR-013, ADR-014
 - [x] Restructure: Angular app moved to `app/`, next to `functions/` (ADR-015, prompt #14)
-- [ ] **M3 – Ingestion**
+- [ ] **M3 – Ingestion** – part 2b cut – not built; replay + Fetch now only
   - [x] Part 1: `parseFeed` (RSS + Atom), `ReplaySourceAdapter`, source config, `eventId`; 13 Vitest tests on all four fixtures (prompt #11)
   - [x] Part 2a: `pollAllSources` with `create()` dedup + `sources` status, `onCall pollSourcesNow` (replay only), `npm run poll:replay` dev script (prompt #17); tried against the emulator by me; unit tests with a fake Firestore (prompt #18)
   - [ ] Part 2b: live `FeedSourceAdapter` (User-Agent, timeout), `onSchedule`
-- [ ] M1 + M2 – auth, rule CRUD, security rules + rules tests
+- [x] M1 + M2 – auth, rule CRUD, security rules + rules tests
   - [x] Emulator login (email/password), sign-out – code in prompt #19; tried in the browser by me, works (~23:30)
   - [x] Rule form on `/alerts` (create, list, pause/resume, delete) + `rules` security rules + index – code in prompt #21, hardened in #22; tried in the browser by me, works (~00:50)
   - [x] Rules tests for `rules` and `events` (prompt #24)
