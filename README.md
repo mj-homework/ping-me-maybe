@@ -83,7 +83,7 @@ A normal user: enter an email and password in the app and click **Create account
    FIRESTORE_EMULATOR_HOST=127.0.0.1:8080 npm run poll:replay
    ```
 
-4. Open Mailpit at http://127.0.0.1:8025: 2 emails for the `florida` rule.
+4. Open Mailpit at http://localhost:8025: 2 emails for the `florida` rule.
 5. As admin, open `/admin/events` to see the ingested events.
 
 Running `poll:replay` again adds nothing: the events already exist (deduplicated by ID), so no new emails are sent.
@@ -92,15 +92,17 @@ Not in the demo yet: Slack, the admin "Fetch now" button, the admin deliveries v
 
 ### Ports and URLs
 
-| What         | Where                 |
-| ------------ | --------------------- |
-| App          | http://localhost:4200 |
-| Emulator UI  | http://localhost:4000 |
-| Firestore    | 127.0.0.1:8080        |
-| Auth         | 127.0.0.1:9099        |
-| Functions    | 127.0.0.1:5001        |
-| Mailpit UI   | http://127.0.0.1:8025 |
-| Mailpit SMTP | 127.0.0.1:1025        |
+| What                 | Where                 |
+| -------------------- | --------------------- |
+| App UI               | http://localhost:4200 |
+| Firebase Emulator UI | http://localhost:4000 |
+| Firestore            | 127.0.0.1:8080        |
+| Auth                 | 127.0.0.1:9099        |
+| Functions            | 127.0.0.1:5001        |
+| Mailpit UI           | http://localhost:8025 |
+| Mailpit SMTP         | 127.0.0.1:1025        |
+
+Rows with `http://` open in a browser; the others are ports the code uses.
 
 ### After a restart or rebuild
 

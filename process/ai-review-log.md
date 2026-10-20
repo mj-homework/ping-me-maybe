@@ -192,3 +192,10 @@ Record of how AI-generated output was reviewed: what was checked, and what was c
 - **What I checked:** Check (me): reviewed the README.
 - **What I changed / rejected:** Decided by me: "in the readme, how to start mailpit: `.\mailpit.exe  --smtp 127.0.0.1:1025 --listen 127.0.0.1:8025`". IDE Claude added the bash form with the same flags. Then: "mailpit show somehow which is win/mac" – the two blocks are now labelled "Windows (PowerShell)" and "macOS / Linux". Then: "4. Create users - why 2 very similar rows? win/mac again?" – the same labels added to the `admin:grant` and `poll:replay` blocks.
 - **Why:** Explicit flags make the ports visible in the README and bind Mailpit to this machine only; the OS labels tell the reader which block to copy.
+
+### time not given – README ports table labels (prompt #28)
+
+- **What the AI produced:** the "Ports and URLs" table labelled the rows "App" and "Emulator UI".
+- **What I checked:** Check (me): reviewed the README table.
+- **What I changed / rejected:** Decided by me: "change: App -> App UI / change: Emulator UI ->  Firebase Emulator UI". Then: "change mailpit to http://localhost:8025" (reverses #27) and "add line: \"Rows with http:// open in a browser; the others are ports the code uses.\"". IDE Claude's recommendation to use `127.0.0.1:4000` for the Emulator UI was not taken.
+- **Why:** Reason not stated.
