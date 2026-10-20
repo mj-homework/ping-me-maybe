@@ -16,6 +16,14 @@ That is why the logs in `process/` label each check as "Check (planning chat)", 
 
 Everything runs on the Firebase Emulator Suite with the demo project `demo-ping-me-maybe`. There is no real Firebase project, no billing and nothing to configure.
 
+**Runs fully offline.**
+
+- **Feeds:** the news feeds are snapshots in the repo, in `functions/fixtures/`. `bbc-world.xml` and `bbc-business.xml` were recorded from the live BBC feeds on 2026-10-19 (~17:00 Europe/Budapest); `reddit-nottheonion.demo.xml` is a small hand-curated replay of the r/nottheonion feed for a predictable demo. Polling reads these files; no feed is fetched.
+- **No outside calls from the project's code:** after `npm install`, the app and the Cloud Functions talk only to the local emulators and Mailpit. The only network client in `functions/` is the SMTP connection to `SMTP_HOST`, which defaults to `127.0.0.1`.
+- **Emails** go only to the local Mailpit (SMTP 127.0.0.1:1025); nothing is sent to a real mailbox.
+- **Firebase:** a `demo-` project ID can only be used with the emulators, so nothing can reach a real Firebase project.
+- **Exceptions outside the project's code:** on its first `firebase emulators:start`, the Firebase CLI downloads the emulator files once (then cached in `~/.cache/firebase/emulators`), and it may check for a newer CLI version. Event links in the app and in the emails open the real news sites only when you click them.
+
 ### 1. Prerequisites
 
 - **Node.js 24** (`engines` in `functions/package.json`) and **npm** (npm 12 is used here).
