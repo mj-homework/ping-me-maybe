@@ -4,13 +4,15 @@ import { EventListItem } from '../../core/models/event';
 import { sourceName } from '../../core/models/sources';
 import { EventsService } from '../../core/services/events';
 import { PollingService, SourcePollResult } from '../../core/services/polling';
+import { AdminNavComponent } from './admin-nav';
 
 const MAX_EVENTS = 50;
 
 @Component({
   selector: 'app-admin-events-page',
-  imports: [DatePipe],
+  imports: [AdminNavComponent, DatePipe],
   template: `
+    <app-admin-nav />
     <h1>Events</h1>
     <p>
       <button type="button" [disabled]="fetching()" (click)="fetchNow()">

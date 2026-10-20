@@ -1,10 +1,12 @@
 import { Component } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { AdminNavComponent } from './admin-nav';
 
 @Component({
   selector: 'app-admin-page',
-  imports: [RouterLink],
+  imports: [AdminNavComponent, RouterLink],
   template: `
+    <app-admin-nav />
     <h1>Admin</h1>
     <ul>
       <li><a routerLink="events">Events</a> – newest ingested events and the Fetch now button</li>

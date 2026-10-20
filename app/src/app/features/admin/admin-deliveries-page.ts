@@ -2,13 +2,15 @@ import { Component, DestroyRef, inject, signal } from '@angular/core';
 import { DatePipe } from '@angular/common';
 import { Delivery } from '../../core/models/delivery';
 import { DeliveriesService } from '../../core/services/deliveries';
+import { AdminNavComponent } from './admin-nav';
 
 const MAX_DELIVERIES = 50;
 
 @Component({
   selector: 'app-admin-deliveries-page',
-  imports: [DatePipe],
+  imports: [AdminNavComponent, DatePipe],
   template: `
+    <app-admin-nav />
     <h1>Deliveries</h1>
     @if (error(); as message) {
       <p role="alert">Could not load deliveries: {{ message }}</p>

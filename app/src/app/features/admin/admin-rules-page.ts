@@ -3,13 +3,15 @@ import { DatePipe, SlicePipe } from '@angular/common';
 import { Rule } from '../../core/models/rule';
 import { SourceId, sourceName } from '../../core/models/sources';
 import { RulesService } from '../../core/services/rules';
+import { AdminNavComponent } from './admin-nav';
 
 const MAX_RULES = 50;
 
 @Component({
   selector: 'app-admin-rules-page',
-  imports: [DatePipe, SlicePipe],
+  imports: [AdminNavComponent, DatePipe, SlicePipe],
   template: `
+    <app-admin-nav />
     <h1>Rules</h1>
     @if (error(); as message) {
       <p role="alert">Could not load rules: {{ message }}</p>
