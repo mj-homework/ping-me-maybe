@@ -21,6 +21,8 @@
 - [x] M5 part: `/admin/events` list, `admin` guard, `events` admin-read rule – code in prompts #19/#20; tried in the browser by me, works (~23:30)
 - [x] M4 – matcher, email (Mailpit), idempotency (S4) – code in #23 (matcher + `matchEvent` + `sendDelivery` + email channel, matcher tests); tried by me, works (~01:27)
 - [ ] M5 + M6 – admin view, Fetch now, guard
+  - [x] M5 – /admin/rules, /admin/deliveries, deliveries read rule + rules tests, disabled Disable/Retry (A15) – code in #29; tried in the browser by me, works (~10:25)
+  - [ ] M6 – Fetch now button (admin only)
 - [ ] S1 – Slack (only if M4 passes)
 - [ ] README, demo rehearsal, close logs, final push
 

@@ -84,11 +84,15 @@ A normal user: enter an email and password in the app and click **Create account
    ```
 
 4. Open Mailpit at http://localhost:8025: 2 emails for the `florida` rule.
-5. As admin, open `/admin/events` to see the ingested events.
+5. As admin, open `/admin` (or the **Admin** link in the header):
+   - `/admin/events`: the ingested events.
+   - `/admin/rules`: all users' rules, with a disabled **Disable** button (coming later).
+   - `/admin/deliveries`: every notification with its status (`sent` / `failed`) and error.
+6. Optional – **failed delivery:** stop Mailpit, create another rule (e.g. _BBC World_, keyword `the`, email), delete the `events` collection in the Emulator UI (Firestore), and run `poll:replay` again. `/admin/deliveries` shows `failed` rows for the new rule with the SMTP connection error and a disabled **Retry** button. The old `sent` rows do not change and the first rule gets no new rows: each delivery has a fixed ID per event, rule and channel, so it is never created twice.
 
-Running `poll:replay` again adds nothing: the events already exist (deduplicated by ID), so no new emails are sent.
+Running `poll:replay` again adds nothing: the events already exist (deduplicated by ID), so no new emails are sent. If you delete `deliveries` too before polling again, the emails are sent again; in real use `deliveries` is never deleted, which is what prevents duplicates (S4).
 
-Not in the demo yet: Slack, the admin "Fetch now" button, the admin deliveries view.
+Not in the demo yet: Slack, the admin "Fetch now" button.
 
 ### Ports and URLs
 
@@ -120,6 +124,7 @@ Rows with `http://` open in a browser; the others are ports the code uses.
 
 - **Port already in use:** another emulator or app is still running; stop it, or check the ports table.
 - **No email:** is Mailpit running? In the Emulator UI → Firestore, open the `deliveries` document and check `status` and `error`.
+- **No email and no delivery:** were the events already there before the rule? Rules only match newer events (A5) and a re-poll creates no new events (dedup). Delete the `events` collection in the Emulator UI and run `poll:replay` again.
 - **Admin page not visible:** sign out and in again, so the ID token carries the new claim.
 
 ## Development

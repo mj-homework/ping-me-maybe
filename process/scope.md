@@ -132,7 +132,7 @@ Decided now so they aren't decided at 3 a.m. Cut in this order:
 3. Log in as **admin** → **Fetch now** (replay adapter for a deterministic demo).
 4. Show the emails in Mailpit (and the Slack message, if S1 is built).
 5. **Fetch now** again → show that nothing is sent twice.
-6. Stop Mailpit (or use a broken Slack webhook) → Fetch new replay data → admin deliveries table shows `failed` with its reason.
+6. Stop Mailpit (or use a broken Slack webhook) → create a new rule (e.g. *BBC World*, keyword `the`) → delete the `events` collection in the Emulator UI → **Fetch now** (or `poll:replay`) → admin deliveries table shows `failed` with its reason for the new rule.
 7. Show the disabled admin write actions and explain the plan for them.
 8. If S1 is built: show the Slack commit diff → no pipeline changes (extensibility proof).
 

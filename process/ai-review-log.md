@@ -213,3 +213,17 @@ Record of how AI-generated output was reviewed: what was checked, and what was c
 - **What I checked:** Check (IDE Claude, git diff): the restore went back to HEAD, so the new block was gone as well.
 - **What I changed / rejected:** IDE Claude re-applied the same two edits (diff checked) and re-ran `npm run test:rules` (42/42). Next time: back up an uncommitted file before mutating, or mutate only after committing.
 - **Why:** The prompt's "restore with `git checkout`" assumed the file was committed (planning chat's mistake, carried over from #24). The re-applied block is verified by the full rules suite (42/42), and the lesson keeps the next mutation check from losing work.
+
+### 2026-10-20 10:20 – README did not explain the "no email" case (prompt #30)
+
+- **What the AI produced:** the #26 README demo flow (rule before polling, A5) without a hint for the case where the events already exist.
+- **What I checked:** Check (me): created a rule after events were already ingested → no email. Check (planning chat): explained the A5 + dedup cause.
+- **What I changed / rejected:** README troubleshooting line and a failed-delivery demo step (prompt #30).
+- **Why:** The README showed the right order, but not what happens if the events are already there; a reviewer who polls first gets no email and no hint why.
+
+### 2026-10-20 10:32 – Failed-delivery demo step needs a new rule (prompt #30)
+
+- **What the AI produced:** nothing yet – the prompt's README step: stop Mailpit, delete `events`, run `poll:replay` → `failed` rows.
+- **What I checked:** Check (IDE Claude, code + #29 emulator run): re-created events get the same IDs, so an existing rule's delivery IDs already exist and are skipped ("0 created / 1 existing" in #29); only a rule without deliveries for those events gets new (here `failed`) rows.
+- **What I changed / rejected:** IDE Claude added "create another rule (e.g. BBC World, `the`)" to the README step, the `design.md` §5 resolution and `scope.md` demo step 6.
+- **Why:** [FILL IN]
