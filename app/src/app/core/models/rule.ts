@@ -18,3 +18,6 @@ export interface Rule {
 
 /** What the form provides; the service adds the owner, `active` and the timestamps. */
 export type NewRule = Pick<Rule, 'name' | 'sourceIds' | 'keywords' | 'channels'>;
+
+/** What an owner can edit (#32); channels stay as they are. */
+export type RuleChanges = Pick<Rule, 'name' | 'sourceIds' | 'keywords'>;

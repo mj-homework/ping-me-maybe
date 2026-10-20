@@ -94,6 +94,8 @@ A normal user: enter an email and password in the app and click **Create account
 
 Polling again (**Fetch now** or `poll:replay`) adds nothing: the events already exist (deduplicated by ID), so no new emails are sent. If you delete `deliveries` too before polling again, the emails are sent again; in real use `deliveries` is never deleted, which is what prevents duplicates (S4).
 
+Rules can be edited on `/alerts` (**Edit**: name, sources, keywords). An edit applies to events ingested afterwards; past deliveries stay as they are.
+
 Not in the demo yet: Slack.
 
 ### Ports and URLs

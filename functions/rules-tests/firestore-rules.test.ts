@@ -203,6 +203,18 @@ describe('rules: update', () => {
     );
   });
 
+  it('lets the owner edit name, sources and keywords with a server updatedAt', async () => {
+    // Same fields as RulesService.update in app/ (#32).
+    await assertSucceeds(
+      updateDoc(ruleRef(ownerDb()), {
+        name: 'World news',
+        sourceIds: ['bbc-world', 'bbc-business'],
+        keywords: ['earthquake', 'flood'],
+        updatedAt: serverTimestamp(),
+      }),
+    );
+  });
+
   it.each<[string, DocumentData]>([
     ['userId changes', { userId: OTHER }],
     ['createdAt changes', { createdAt: PAST }],

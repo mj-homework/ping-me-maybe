@@ -15,7 +15,7 @@ import {
   updateDoc,
   where,
 } from 'firebase/firestore';
-import { NewRule, Rule } from '../models/rule';
+import { NewRule, Rule, RuleChanges } from '../models/rule';
 import { FIREBASE_AUTH, FIRESTORE } from './firebase';
 
 type RuleDoc = Omit<Rule, 'id' | 'createdAt' | 'updatedAt'> & {
@@ -56,6 +56,16 @@ export class RulesService {
       channels: rule.channels,
       active: true,
       createdAt: serverTimestamp(),
+      updatedAt: serverTimestamp(),
+    });
+  }
+
+  /** Owner edit. `userId`, `createdAt` (A5), `channels` and `active` are not sent, so they stay. */
+  async update(id: string, changes: RuleChanges): Promise<void> {
+    await updateDoc(doc(this.db, 'rules', id), {
+      name: changes.name.trim(),
+      sourceIds: changes.sourceIds,
+      keywords: normalizeKeywords(changes.keywords),
       updatedAt: serverTimestamp(),
     });
   }

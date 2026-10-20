@@ -23,7 +23,7 @@
 - [x] M5 + M6 – admin view, Fetch now, guard
   - [x] M5 – /admin/rules, /admin/deliveries, deliveries read rule + rules tests, disabled Disable/Retry (A15) – code in #29; tried in the browser by me, works (~10:25)
   - [x] M6 – Fetch now button (admin only) – code in #31; tried in the browser by me, works (~11:07)
-- [ ] S1 – Slack (only if M4 passes)
+- [ ] S1 – Slack (only if M4 passes) – cut – designed (ADR-011), not built; time went to M2 editing and M6
 - [ ] README, demo rehearsal, close logs, final push
 
 **Behind schedule:** design work ran until ~18:15 instead of 17:15, so M3 has ~45 min before the 19:00 break.
@@ -50,8 +50,10 @@ If step 4 does not fit, it goes first in the morning; security-rules tests move 
 | 08:15 – 09:00 | Rules tests |
 | 09:00 – 09:30 | Admin claim seed script (A16) |
 | 09:30 – 10:45 | **M5** admin view (rules, deliveries) + **M6** Fetch now button |
-| 10:45 – 11:30 | **S1 – Slack**, if it fits |
-| 11:30 – 13:00 | README, demo rehearsal, logs, final push |
+| 10:45 – 11:30 | ~~**S1 – Slack**, if it fits~~ – cut; went to M6 (Fetch now) |
+| 11:30 – 11:50 | Rule editing (#32) |
+| 11:50 – 12:05 | Own CSS |
+| 12:05 – 13:00 | README, demo rehearsal, close logs, final push |
 
 Decided by me: "Morning order: rules tests first (never cut), live adapter after Slack."
 

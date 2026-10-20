@@ -60,7 +60,7 @@ const MAX_EVENTS = 50;
         <tbody>
           @for (event of events(); track event.id) {
             <tr>
-              <td>{{ event.sourceId }}</td>
+              <td>{{ sourceName(event.sourceId) }}</td>
               <td>
                 <a [href]="event.url" target="_blank" rel="noopener noreferrer">{{
                   event.title
